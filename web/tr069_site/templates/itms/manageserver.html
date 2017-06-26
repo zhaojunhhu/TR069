@@ -1,0 +1,193 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+{% load staticfiles %}
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<script type="text/javascript" src="{% static 'admin/js/jquery.js' %}"></script>
+<style type="text/css">
+<!--
+.STYLE1 {
+	font-size: 19px;
+	font-family: "新宋体";
+	background-image:url({% static 'managebar.bmp' %});
+	background-repeat: no-repeat;
+	color:#FFFFFF;
+	font-style:italic;
+	text-indent:1cm;
+	letter-spacing:5px;
+	height:50px;
+}
+.STYLE3 {
+	font-size: 18px;
+	font-weight: 100;
+	color: #4169E1;
+	margin-right: 10px;
+	}
+-->
+</style>
+
+<script>
+	function startOrStopServer(button){
+		var server_name = button.name;
+		var url =  "/itms/startorstopserver/"+server_name+"/";
+		location.replace(url);
+		
+	};
+	
+	function upgradeServer(button){
+		var server_name = button.name;
+		if (server_name=="TR069_Upgrade"){
+			version = $("#tr069_version").val();
+		}else{
+			version = $("#web_version").val();
+		}
+		var url =  "/itms/upgradeserver/"+version+"/" +server_name+"/";
+		location.replace(url);
+		
+	}
+	
+</script>
+</head>
+
+<body>
+<form id="form1" name="form1" method="post" action="">
+    
+	<div style="height:30px;">
+		&nbsp
+	</div>
+    <table style="width:600px;" border="0" align="center">
+		<tr>
+		  <td colspan="4" class="STYLE1">服务器管理</td>
+		</tr>
+		<tr>
+			<td style="width: 10%;height:30px;border-top:1px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 0px solid #778899;color: #4169E1;font-size:14px">
+				服务器
+			</td>
+			<td style="width: 30%;height:30px;border-top:1px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 0px solid #778899;color: #4169E1;font-size:14px">
+				当前版本
+			</td>
+			<td style="width: 30%;height:30px;border-top:1px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 0px solid #778899;color: #4169E1;font-size:14px">
+				版本选择
+			</td>
+			<td style="height:30px;border-top:1px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 1px solid #778899;color: #4169E1;font-size:14px">
+				操作
+			</td>
+		</tr>
+		<tr>
+			<td align="left" style="width: 10%;height:30px;border-top:0px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 0px solid #778899;color: #4169E1;"  class="STYLE3" >TR069</td>
+			
+			<td id="tr069_cur" style="width: 30%;height:30px;border-top:0px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 0px solid #778899;color: #4169E1;">
+				{{tr069_current_version}}
+			</td>
+			<td  style="width: 30%;height:30px;border-top:0px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 0px solid #778899;color: #4169E1;">
+				
+				<select id="tr069_version" style="width:180px" onchange="updateTR069Function()">
+					{% for tr069_version in list_tr069_version %}
+						 <option value="{{tr069_version}}" {%ifequal tr069_version tr069_current_version %} selected="selected" {% endifequal %}>{{tr069_version}}</option>
+					{% endfor %}
+				</select>
+			</td>
+			<td style="height:40px;border-top:0px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 1px solid #778899;color: #4169E1;">
+				
+				<input id="tr069_update" type="button" onclick="upgradeServer(this)" name="TR069_Upgrade" value="升级" />
+				<input type="button" onclick="startOrStopServer(this)" name="TR069" value="{{tr069_state}}" style=""/>
+			
+			</td>
+		</tr>
+		<tr>
+			<td align="left" style="width: 10%;height:30px;border-top:0px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 0px solid #778899;color: #4169E1;"  class="STYLE3" >WEB</td>
+			
+			<td id="web_cur" style="width: 20%;height:30px;border-top:0px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 0px solid #778899;color: #4169E1;">
+				{{web_current_version}}
+			</td>
+			
+			<td style="width: 20%;height:30px;border-top:0px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 0px solid #778899;color: #4169E1;">
+				<select id="web_version" style="width:180px" onchange="updateWEBFunction()">
+					{% for web_version in list_web_version %}
+						 <option value="{{web_version}}" {%ifequal web_version web_current_version %} selected="selected" {% endifequal %}>{{web_version}}</option>
+					{% endfor %}
+				</select>
+			</td>
+			<td style="height:40px;border-top:0px solid #778899;border-bottom: 1px solid #778899;border-left: 1px solid #778899;
+			border-right: 1px solid #778899;color: #4169E1;">
+				 
+				<!--
+				<input type="button" onclick="startOrStopServer(this)" name="WEB" value="{{web_state}}" style=""/>
+		        -->
+				<input id="web_update" type="button"  onclick="upgradeServer(this)" name="WEB_Upgrade" value="升级"" />
+			</td>
+		</tr>
+    </table>
+  
+  <script>
+	var message = "{{message}}";
+	if (message){
+		alert(message);
+	}
+	
+	// tr069服务器
+	function updateTR069Function()
+	{
+		
+		var  button = document.getElementById("tr069_update")
+		
+		var  cur = $("#tr069_cur").text()
+		var  select = $("#tr069_version").val()
+		
+		// 使用正则表达式去除字符串两边的空格
+		var  cur_re = cur.replace(/(^\s*)|(\s*$)/g, "")
+        var  select_re = select.replace(/(^\s*)|(\s*$)/g, "")
+		
+		if (cur_re == select_re)
+		{
+			button.disabled=true;
+		}	
+		else
+		{
+			button.disabled=false
+		}
+		
+	}
+	updateTR069Function()
+	
+	// WEB服务器
+	function updateWEBFunction()
+	{
+		
+		var  button = document.getElementById("web_update")
+		
+		var  cur = $("#web_cur").text()
+		var  select = $("#web_version").val()
+		
+		// 使用正则表达式去除字符串两边的空格
+		var  cur_re = cur.replace(/(^\s*)|(\s*$)/g, "")
+        var  select_re = select.replace(/(^\s*)|(\s*$)/g, "")
+		
+		if (cur_re == select_re)
+		{
+			button.disabled=true;
+		}	
+		else
+		{
+			button.disabled=false
+		}
+		
+	}
+	updateWEBFunction()
+	
+  </script>
+</form>
+</body>
+</html>

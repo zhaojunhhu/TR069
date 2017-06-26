@@ -1,0 +1,199 @@
+{% extends "itms/inquirytasklist.html" %}
+{% load staticfiles %}
+{% block inquierytasklistresult %}
+{% if inquiry_rpc_result_list %}
+	
+	{% for rpc in inquiry_rpc_result_list %}
+		<tr>
+			<td class="tablelisttd1" >
+				{{rpc.rpc_id}}
+			</td>
+			<td class="tablelisttd2" >
+				{{rpc.rpc_name}}
+			</td>
+			<td class="tablelisttd3" >
+				{{rpc.time_start}}
+			</td>
+			<td class="tablelisttd4" >
+				{{rpc.time_finish}}
+			</td>
+			<td class="tablelisttd5" style="border-right: 1px solid #778899;" >
+				{{rpc.result_status}}
+			</td>
+		</tr>
+	{% endfor %}
+{% else %}
+	<tr>
+		<td colspan="7" style="font-size: 13px">
+			未查找到相关信息
+		</td>
+	</tr>
+{% endif %}
+{% endblock %}
+
+
+{% block divbottom %}
+	{% if inquiry_rpc_result_list %}
+		<tr>
+			<td colspan='5'>
+				
+			</td>
+		</tr>
+		<tr>
+			<td style="font-size:14px">
+				共{{total_rpc}}条记录
+			</td>
+			<td colspan='2'>
+			
+			</td>
+			<td colspan='2' style="font-size:14px">
+				<span style="float:right">
+					<label id="totalpage" style="width: 20px">共{{total_page}}页</label>
+					<a id="a_firstpage" style="width: 20px" href="/itms/{{cpe_id}}/1/inquirytasklistresult/{{revert}}/{{worklist_id}}/?inquirytype={{inquiry_type}}&textsn1={{input_start_time}}&textsn2={{input_finish_time}}&inquiry=%E6%9F%A5%E8%AF%A2"> 第一页</a>
+					<a id="a_lastpage" style="width: 20px" href="/itms/{{cpe_id}}/{{last_page}}/inquirytasklistresult/{{revert}}/{{worklist_id}}/?inquirytype={{inquiry_type}}&textsn1={{input_start_time}}&textsn2={{input_finish_time}}&inquiry=%E6%9F%A5%E8%AF%A2"> 上一页 </a>
+					<label>第</label>
+					<input id="inputpage" style="width:55px;ime-mode:disabled" type="text" name="inputpage" onpaste="return false;" value="{{inquiry_page}}" onkeypress="keyPress()" />
+					<label>页</label>
+					<a id="a_nextpage" style="width: 20px" href="/itms/{{cpe_id}}/{{next_page}}/inquirytasklistresult/{{revert}}/{{worklist_id}}/?inquirytype={{inquiry_type}}&textsn1={{input_start_time}}&textsn2={{input_finish_time}}&inquiry=%E6%9F%A5%E8%AF%A2"> 下一页 </a>
+					<input style="margin-left:20px;" type="button" name="skippage" value="跳转"
+						   onclick="return checkUserInput()" />
+				</span>
+			</td>
+		</tr>
+	{% endif %}
+	
+	<script>
+		function setLinesBackgroundColor () {
+			
+			var temp_list_lines = document.getElementById("tableListBody").childNodes
+			
+			var list_lines = new Array()
+			
+			// 为兼容firefox浏览器，先将TR行挑出
+			var tmp_num = 0
+			for(var iLoop = 0; iLoop < temp_list_lines.length; iLoop ++)
+			{
+				
+				var line = temp_list_lines[iLoop];
+				if ( "TR" == line.nodeName  ) {
+					list_lines[tmp_num] = line
+					tmp_num = tmp_num + 1
+				}
+			}	
+			
+		    for(var iLoop = 0; iLoop < list_lines.length; iLoop ++)
+			{
+				
+				var line = list_lines[iLoop];
+				
+				var tmp_line = iLoop + 1;
+				if (tmp_line % 2 != 0 )
+				{
+					// 奇数行
+					line.style.backgroundColor="#FFFFFF";
+                    line.onmouseover = mouseoverFunction
+					line.onmouseout = mouseoutOddFunction
+				} else {
+					// 偶数行
+					line.style.backgroundColor="#F7F9FC";
+					line.onmouseover = mouseoverFunction
+					line.onmouseout = mouseoutEvenFunction
+				}	
+			}	
+		}
+		
+		// 鼠标悬停时颜色
+		function mouseover (line) {
+			line.style.backgroundColor="#ECF4FE";
+		}
+		
+		// 鼠标移出时奇数行颜色
+		function mouseoutOdd (line) {
+			line.style.backgroundColor="#FFFFFF";
+		}
+		
+		// 鼠标移出时偶数行颜色
+		function mouseoutEven (line) {
+			line.style.backgroundColor="#F7F9FC";
+		}
+		
+		function mouseoverFunction() 
+		{ 
+			mouseover(this); 
+		}
+		function mouseoutOddFunction() 
+		{ 
+			mouseoutOdd(this); 
+		}
+		function mouseoutEvenFunction() 
+		{ 
+			mouseoutEven(this); 
+		}
+		setLinesBackgroundColor()
+	</script>
+	
+	<script type="text/javascript">
+		
+		var last_page = document.getElementById("a_lastpage")
+		var next_page = document.getElementById("a_nextpage")
+		var first_page = document.getElementById("a_firstpage")
+		
+		function disableLink(link) {
+            //删除href属性,使其成为文本元素
+            link.removeAttribute("href");
+            //设置disabled属性
+            link.setAttribute("disabled", "disabled");
+        }
+
+		var thepage = $("#inputpage").val()
+		var re = /\d+/	
+		var tmp_total_page = $("#totalpage").text()
+		
+		
+		//'tmp_total_page.match(...).0' 为空或不是对象 进行处理
+		var total_page = tmp_total_page.match(re)[0]
+		/*
+		if (!(tmp_total_page.match(re)[0])){
+			var total_page = tmp_total_page.match(re)[0]
+		} else {
+			//return false
+		}
+		*/
+		if (thepage == "1") {
+			disableLink(last_page)
+			disableLink(first_page)
+		}	
+		if (thepage == total_page) {
+			disableLink(next_page)
+		}
+
+	</script>
+	<script>
+		function checkUserInput() {
+			var thepage = $("#inputpage").val()
+			href = window.location.href
+			cpe_id = href.split('/')[4]
+			//进行强制类型转换
+			if( parseInt(thepage) > parseInt(total_page) || parseInt(thepage) < 1) {
+				
+				alert("请输入正确的页码，即1到" + total_page + "之间的数字")
+				return false
+		    }
+			url = "/itms/" + cpe_id + "/" + thepage +  "/inquirytasklistresult/{{revert}}/{{worklist_id}}/?inquirytype={{inquiry_type}}&textsn1={{input_start_time}}&textsn2={{input_finish_time}}&inquiry=%E6%9F%A5%E8%AF%A2"
+			location.replace(url)
+			return true
+		}
+	</script>
+	<script>
+		function keyPress() {  
+			var keyCode = event.keyCode;  
+			if ((keyCode >= 48 && keyCode <= 57))  
+				{  
+					event.returnValue = true;  
+				} else {  
+					event.returnValue = false;  
+				}  
+			} 
+	</script>
+	
+{% endblock %}

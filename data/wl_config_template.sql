@@ -1,0 +1,69 @@
+-- MySQL dump 10.13  Distrib 5.1.68, for Win32 (ia32)
+--
+-- Host: localhost    Database: TR069_trunk
+-- ------------------------------------------------------
+-- Server version	5.1.68-community
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `WL_CONFIG`
+--
+
+DROP TABLE IF EXISTS `WL_CONFIG`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `WL_CONFIG` (
+  `CONFIG_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ISP` varchar(50) NOT NULL,
+  `VERSION` varchar(50) NOT NULL,
+  `BASE_ISP` varchar(50) DEFAULT '',
+  `ACS2CPE_NAME` varchar(50) DEFAULT '',
+  `ACS2CPE_PASSWORD` varchar(50) DEFAULT '',
+  `CPE2ACS_NAME` varchar(50) DEFAULT '',
+  `CPE2ACS_PASSWORD` varchar(50) DEFAULT '',
+  `EVENTCODE_MAP` text,
+  PRIMARY KEY (`CONFIG_ID`),
+  UNIQUE KEY `ISP` (`ISP`,`VERSION`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `WL_TEMPLATE`
+--
+
+DROP TABLE IF EXISTS `WL_TEMPLATE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `WL_TEMPLATE` (
+  `TEMPLATE_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ISP` varchar(50) NOT NULL,
+  `VERSION` varchar(50) NOT NULL,
+  `DOMAIN` varchar(50) NOT NULL,
+  `METHOD` varchar(100) NOT NULL,
+  `PARAMETERS` text,
+  `DOC` text,
+  PRIMARY KEY (`TEMPLATE_ID`),
+  UNIQUE KEY `ISP` (`ISP`,`VERSION`,`DOMAIN`,`METHOD`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2014-06-16 18:58:38

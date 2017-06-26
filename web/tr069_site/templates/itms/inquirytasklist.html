@@ -1,0 +1,142 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+{% load staticfiles %}
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="/static/admin/js/jquery.js" type="text/javascript"></script>
+	<link href="/static/common.css" rel="stylesheet" type="text/css" />
+	<style type="text/css"></style>
+	<script type="text/javascript" src="{% static 'admin/js/My97DatePicker/WdatePicker.js' %}"></script>
+					
+	<script language="javascript">
+		function checktime(){
+			var textsn1_value = document.getElementById("textsn1").value
+		    var textsn2_value = document.getElementById("textsn2").value
+			
+			if (textsn1_value == '' && textsn2_value == '') {
+				alert("请输入开始时间和结束时间")
+				return false
+			}
+			if (textsn1_value == '') {
+				alert("请输入开始时间")
+				return false
+			}
+			if (textsn2_value == '') {
+				alert("请输入结束时间")
+				return false
+			}
+			if (textsn2_value <= textsn1_value){
+				alert("结束时间不应该小于或等于开始时间,请重新输入")
+				return false
+			}
+			return true
+		}
+
+		function homepagetoworklist(){
+		    var homepage_url =  "/itms/inquiryworklist/";
+		    location.replace(homepage_url)
+		}
+		function homepagetocpe(){
+		    var homepage_url =  "/itms/inquirycpe/";
+		    location.replace(homepage_url)
+		}
+		
+		function backtocpeinfo(){
+			var backto = "/itms/{{cpe_id}}/thecpeinfo/{{revert}}/{{worklist_id}}/"
+			location.replace(backto)
+		}
+		
+	</script>
+	
+	<script language="javascript">
+		function inquiryFunction(){
+			with(document.myForm){
+				var value = inquirytype.value;
+				var parent=document.getElementById("dyntd");
+				parent.innerHTML="";
+				if(inquirytype.value == "all"){
+					strHTML="<input id='textsn' type='text' name='textsn' style='width:100%;display:none;border:dottedpx;' readonly='true' value={{input_sn}}/>";
+					parent.innerHTML=strHTML
+				}else if(inquirytype.value == "author" ){
+					strHTML="操作者:<input id='textsn' type='text' name='textsn' value=\"{{input_sn}}\"/>";
+					parent.innerHTML=strHTML
+				}else{
+					str1HTML="从<input type=text id=textsn name='textsn1' class=Wdate onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss' })\" value=\"{{input_start_time}}\" />";
+					str2HTML="到<input type=text id=textsn name='textsn2' class=Wdate onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss' })\" value=\"{{input_finish_time}}\"/>";
+					strHTML = str1HTML+str2HTML
+					parent.innerHTML = strHTML
+				}
+			}
+		}
+	</script>
+	
+</head>
+<body>
+    <div class="divpanelcontent">
+		<div style="width: 100%;height: 30px">
+			<input style="float: right" type="submit" name="revert" value="返回" onclick="backtocpeinfo()"/>	
+			{% if revert == "yes" %}
+			    <input style="float: right" type="submit" name="pagehome" value="首页" onclick="homepagetocpe()" />
+		        {% else %}
+			    <input style="float: right" type="submit" name="pagehome" value="首页" onclick="homepagetoworklist()" />
+		        {% endif %}
+		</div>
+		<form action="/itms/{{cpe_id}}/1/inquirytasklistresult/{{revert}}/{{worklist_id}}/" method="get" name="myForm" >
+			<div style="clear:both;">	
+				<table align="left" ,cellpadding="0",cellspacing="0",valign="top",style="width: 100%;height: 20;">
+					<tr style="width: 100%">	
+						<td align="left" width="15%">
+							时间范围：
+						</td>
+						<td align="left" width="50%" id="dyntd">
+							从<input type="text" id="textsn1" name="textsn1" class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="{{input_start_time}}" />
+							到<input type="text" id="textsn2" name="textsn2" class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="{{input_finish_time}}" />
+						</td>
+						<td align="left" >
+							<input style="margin-left:5px;" type="submit" id="inquiry" name='inquiry' value="查询" onclick="return checktime()" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="clear:both;margin-top:30px;">
+				<table width="100%" align="left" cellspacing="0" ,cellpadding="0" ,valign="top" >
+					<tr>
+						<td class="tablelistheader" colspan="6" align="left" >
+							设备 {{sn}} 远程操作任务列表
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="clear:both;width:100%;height:500px;overflow: auto">
+				<table style="border-collapse:collapse" width="100%" align="left" cellspacing="0" ,cellpadding="0" ,valign="top">
+					<tr >
+						<td id="titletd2" class="tablelistitem" width="20%">
+							任务编号
+						</td>
+						<td id="titletd3" class="tablelistitem" width="20%">
+							任务描述
+						</td>
+						<td id="titletd4" class="tablelistitem" width="20%">
+							开始时间
+						</td>
+						<td id="titletd5" class="tablelistitem" width="20%">
+							结束时间
+						</td>
+						<td id="titletd6" class="tablelistitem" , style="border-right: 1px solid #778899;">
+							结果
+						</td>
+					</tr>					
+					<tbody id="tableListBody">
+						{% block inquierytasklistresult %}
+						{% endblock %}
+					</tbody>
+				</table>
+			</div>
+			{% block divbottom %}
+		    {% endblock %}
+		</form>
+    </div>
+</body>
+</html>
+    

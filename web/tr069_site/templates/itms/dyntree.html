@@ -1,0 +1,174 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+    {% load staticfiles %}
+<html>
+<head>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="{% static 'admin/js/ext/resources/css/ext-all.css' %}"/>
+        <script type="text/javascript" src="{% static 'admin/js/ext/ext-all.js' %}"></script>
+        <script type="text/javascript" src="{% static 'admin/js/dyntree.js' %}"></script>
+        <script type="text/javascript" src="{% static 'admin/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'admin/js/mask_layer.js' %}"></script>
+        <link href="/static/mask_layer.css" rel="stylesheet" type="text/css" />
+    
+<script type="text/javascript">
+    var cpe_id = "{{cpe_id}}"
+    var root_text = "{{root_text}}"
+    
+//复选框的全选和取消全选    
+$(function () {
+    $("#chk_all").click(function() {
+        $("input[name='checkbox']").prop("checked",this.checked);
+    });
+    var $checkbox = $("input[name='checkbox']");
+    $checkbox.click(function(){
+    $("#chk_all").prop("checked",$checkbox.length ==
+                $checkbox.filter(":checked").length ? true : false);
+    });
+    });
+    
+    function homepagetoworklist(){
+	var homepage_url =  "/itms/inquiryworklist/";
+	location.replace(homepage_url)
+    }
+    function homepagetocpe(){
+        var homepage_url =  "/itms/inquirycpe/";
+        location.replace(homepage_url)
+    }
+    
+    function backtocpeinfo(){
+	var backto = "/itms/{{cpe_id}}/thecpeinfo/{{revert}}/{{worklist_id}}/"
+	location.replace(backto)
+    }
+    
+</script>
+</head>
+<body>
+    <div id="div" style="height: 25px;width:100%;">
+        <table align="right" >
+            <tr>
+                <td id="loadbar" style="height:20px;">
+                    <img src="{%static 'load.bmp' %}" />
+                </td>
+                <td>
+                    {% if revert == "yes" %}
+			<input style="float: right" type="submit" name="pagehome" value="首页" onclick="homepagetocpe()" />
+		    {% else %}
+			<input style="float: right" type="submit" name="pagehome" value="首页" onclick="homepagetoworklist()" />
+		    {% endif %}
+                </td>
+                <td>
+                    <input style="float: right;" type="submit" name="revert" value="取消" onClick="backtocpeinfo()"/>
+                </td>
+            </tr>
+        </table>
+        
+    </div>
+    <div id="tree-div" style="width:100%;"></div>
+    <div id="path-div" style="width: 100%;font-size: 14px; background:#00FF00" >
+        
+        <table id="device" width="100%" align="left" cellspacing="0" cellpadding="0" valign="top" border="1" bordercolor="#4169E1">
+        <tr>
+            <td colspan="4" background={%static 'head.bmp' %}>
+            <font color="#6699CC">&nbsp;<b>设备操作</b></font>
+            </td>
+        </tr>
+        <tr id="tab1">
+            <td style="width: 20%; text-indent:8px;">
+            路径
+            </td>
+            <td id="pathvalue" style="width: 80%; text-indent:8px;">
+            <textarea style='width:95%' rows = "1" readonly = "readonly"/>{{root_text}}.</textarea>
+            </td>
+        </tr>
+        <tr id="tab2"></tr>
+        <tr id="tab3"></tr>
+        </table>
+    </div>
+        <div id="button" style="border:2px; border-color:#00CC00; margin-left:20%;margin-top:20px">
+        <input id="save" type="button" value="保存参数" onClick="setParameterValues()" />
+        <input id="attr" type="button" value="参数属性" onClick="getParameterAttributes()" />
+        <input id="add" type="button" value="添加实例" onClick="addObject()" />
+        <input id="del" type="button" value="删除实例" onClick="deleteObject()" />
+        <input id="reboot" type="button" value="重启设备" onClick="reboot()" />
+        <input id="default" type="button" value="恢复出厂" onClick="factoryReset()" />
+        <input id="par-val" type="button" value="参数值" onClick="multiParameterValues()" />
+        </div>
+    <div id="paradiv" style="width: 100%;font-size: 14px;height: 230px;overflow: auto;">
+        <table id="paras" width="100%" align="left" cellspacing="0" cellpadding="0" valign="top" border="1" bordercolor="#4169E1" style="border-collapse:collapse;">
+        <thead>
+        <tr align="center" background={%static 'head.bmp' %}>
+            <td><input name="chk_all" type="checkbox" id="chk_all" /></td>
+            <td><font color="#6699CC"><b>参数名称</b></font></td>
+            <td><font color="#6699CC"><b>参数值</b></font></td>
+        </tr>
+        </thead>
+        <tbody id="patb">
+        </tbody>
+        </table>
+    </div>
+    
+    
+    
+    <!--弹出层时背景层DIV-->
+    <div id="fade" class="black_overlay">
+    </div>
+    <div id="MyDiv" class="white_content">
+    <table style="width: 100%;">
+        <tr>
+            <td>
+                <span style="text-align:right">修改参数属性</span>
+            </td>
+            <td>
+                <span style="text-align: right; width: 20%; cursor: pointer;" onClick="CloseDiv('MyDiv','fade')">关闭</span>
+            </td>
+        </tr>
+    </table>
+    
+    <form>
+    <table border="1" width=100% style="text-indent:6px;">
+        <tr>
+            <td bgcolor="#A4D1FF">
+                参数名称：
+            </td>
+        <td id="paraName" colspan="3"> </td>
+        </tr>
+        <tr>
+            <td bgcolor="#A4D1FF">
+                NotificationChange
+            </td>
+            <td>
+            <input name="notichange" type="checkbox" id="notichange" />
+            </td>
+            <td bgcolor="#A4D1FF">
+                Notification
+            </td>
+            <td>
+            <input type="radio" name="1" value="off" disabled="disabled" /> Off
+            <input type="radio" name="1" value="passive" disabled="disabled" /> Passive
+            <input type="radio" name="1" value="active" disabled="disabled" /> Active
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#A4D1FF">
+                AccessListChange
+            </td>
+            <td>
+            <input name="accesschange" type="checkbox" id="accesschange" />
+            </td>
+            <td bgcolor="#A4D1FF">
+                AccessList
+            </td>
+            <td>
+            <input type="checkbox" name="2" disabled="disabled" id='subscriber'/> Subscriber
+            <input type="checkbox" name="2" disabled="disabled" id='bare'/> <input type="text" name="2" disabled="disabled" id='baretext'/>
+            </td>
+        </tr>
+    </table>
+    <input style="margin-left:110px;"  type="button" name="confirm" value="确定" onClick= "setParameterAttributes()"/>
+    <input style="margin-left:130px;" type="button" name="cancel" value="取消" onClick="CloseDiv('MyDiv','fade')"/>
+    </form>
+    </div>
+</body>
+</html>

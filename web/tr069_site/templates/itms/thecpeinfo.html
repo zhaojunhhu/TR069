@@ -1,0 +1,374 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+{% load staticfiles %}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="/static/common.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="{% static 'admin/js/jquery.js' %}"></script>
+    <style type="text/css"></style>
+    <script>
+        var cpe_id = "{{ cpe.cpe_id }}";
+        var db_version = "{{ cpe.interface_version }}";
+        var db_domain = "{{ cpe.cpe_device_type }}";
+
+        function submitRemoteOpt(){
+            var ope=document.getElementById("remoteselect").value;
+            if (ope == "default"){
+                alert("请选择远程操作");
+                return false
+            }else{
+                return true;
+            }
+        }
+
+        $(document).ready(function(){
+            $("#select_isp").change(function(){
+                update_combobox_version_value();
+            });
+
+            $("#select_version").change(function(){
+                update_combobox_domain_value();
+            });
+        });
+
+        function update_combobox_version_value(){
+            // 捕获对应事件，更新运营商版本控件下拉列表
+            var isp_val = $("#select_isp").val();
+            var version_val = db_version;
+            var curr_ctrl = $("#select_version");
+            var url = "/itms/" + cpe_id + "/get_relative_list/";
+            $.getJSON(url, {isp:isp_val}, function(result){
+                if(result.exec_flag == "success"){
+                    // 取值成功，清空下拉列表
+                    curr_ctrl.empty();
+                    curr_ctrl.attr("style", "width:90%");
+                }
+                $.each(result.exec_data, function(i, field){
+                    // 遍历列表，填充下拉列表
+                    var option = $("<option></option>").val(field).text(field);
+                    curr_ctrl.append(option);
+                    if(version_val == field){
+                        // 设置当前选择的值
+                        curr_ctrl.get(0).selectedIndex = i;
+                    }
+                });
+                // 联动更新设备类型的值
+                update_combobox_domain_value();
+            });
+        }
+
+        function update_combobox_domain_value(){
+            // 捕获对应事件，更新设备类型控件下拉列表
+            var isp_val = $("#select_isp").val();
+            var version_val = $("#select_version").val();
+            var domain_val = db_domain;
+            var curr_ctrl = $("#select_domain");
+            var url = "/itms/" + cpe_id + "/get_relative_list/";
+            $.getJSON(url, {isp:isp_val, version:version_val}, function(result){
+                curr_ctrl.empty();
+                curr_ctrl.attr("style", "width:90%");
+                update_input_user_pwd(result.user_pwd);
+                if(result.exec_flag == "fail"){
+                    // 未取到记录，增加空值
+                    var option = $("<option></option>").val("").text("NULL");
+                    curr_ctrl.append(option);
+                }
+                else{
+                    $.each(result.exec_data, function(i, field){
+                        // 遍历列表，填充下拉列表
+                        var option = $("<option></option>").val(field).text(field);
+                        curr_ctrl.append(option);
+                        if(domain_val == field){
+                            // 设置当前选择的值
+                            curr_ctrl.get(0).selectedIndex = i;
+                        }
+                    });
+                }
+            });
+        }
+        
+        function update_input_user_pwd(list_data){
+            // 更新上下行用户名和密码的值
+            if (list_data == "") return;
+            $("#c2a_user").val(list_data[0]);
+            $("#c2a_pwd").val(list_data[1]);
+            $("#a2c_user").val(list_data[2]);
+            $("#a2c_pwd").val(list_data[3]);
+        }
+        
+        function checkStatus(){
+            var target_url = "/itms/" + cpe_id + "/status/";
+            var target_id = "#deviceonlinestate";
+            try{
+                $(target_id).html("<img src='"+"{%static 'checkstatus.gif' %}'"+"/ >");
+            }catch(e){
+                alert(e);
+            }
+            
+            var htmlobj = $.ajax({url: target_url,
+                                  async: true,
+                                  success:function(data){
+                                    $(target_id).html(data);
+                                    if (data == "在线"){
+                                        $(target_id).css('color', "#00FF00");
+                                    }else{
+                                        $(target_id).css('color', "#FF0000");
+                                    }}
+            });
+            
+        }
+        
+        function homepagetoworklist(){
+            var homepage_url =  "/itms/inquiryworklist/";
+            location.replace(homepage_url)
+        }
+        function homepagetocpe(){
+            var homepage_url =  "/itms/inquirycpe/";
+            location.replace(homepage_url)
+        }
+
+        function backtocpe(){
+            var backto = "/itms/1/inquiryresult/?inquirytype=all&inquiry=%E6%9F%A5%E8%AF%A2"
+            location.replace(backto)
+        }
+        function backtocpetoworilist(){
+            var backto = "/itms/{{worklist_id}}/theworklistinfo/{{revert}}/"
+            location.replace(backto)
+        }
+        function backtoworklistinfo(){
+            var homepage_url =  "/itms/{{worklist_id}}/theworklistinfo/{{revert}}/"
+            location.replace(homepage_url)
+        }
+    
+    </script>
+</head>
+<body>
+    <div class="divpanelcontent" style="overflow: auto">
+        <div style="width: 97.5%;height: 30px">
+            
+        {% if revert == "yes" %}
+            {% if worklist_id == "fill" %}
+                <input style="float: right" type="submit" name="revert" value="返回" onclick="backtocpe()"/>
+            {% else %}
+                <input style="float: right" type="submit" name="revert" value="返回" onclick="backtocpetoworilist()"/>
+            {% endif %}
+            <input style="float: right" type="submit" name="pagehome" value="首页" onclick="homepagetocpe()" />
+        {% else %}
+            <input style="float: right" type="submit" name="revert" value="返回" onclick="backtoworklistinfo()"/>
+            <input style="float: right" type="submit" name="pagehome" value="首页" onclick="homepagetoworklist()" />
+        {% endif %}
+        </div>
+        <div style="clear:both;">
+            <form action="/itms/{{ cpe.cpe_id }}/thecpeinfo/{{revert}}/{{worklist_id}}/" method="post">
+                {% csrf_token %}
+                <table style="border-collapse:collapse" width="95%" align="center" cellspacing="0" ,cellpadding="0" ,valign="top">
+                    
+                    <tr>
+                        <td class="tablelistheader" colspan="4" align="left" >
+                            设备：{{cpe.sn}} 的基本信息
+                        </td>
+                    </tr>
+                        
+                    <tr>
+                        <td class="infotr2tdodd"  width="20%">
+                            软件版本
+                        </td>
+                        <td class="infotr2tdeven" width="25%">
+                            {{ cpe.software_version }}
+                        </td>
+                        <td class="infotr2tdodd" width="20%">
+                            硬件版本
+                        </td>
+                        <td class="infotr2tdeven" width="25%" style="border-right: 1.5px solid #6495ED">
+                            {{ cpe.hardware_version }}
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td class="infotdodd"  width="20%">
+                            反向连接地址
+                        </td>
+                        <td class="infotdeven"  width="25%">
+                            {{cpe.connection_request_url}}
+                        </td>
+                        <td class="infotdodd"  width="20%">
+                            设备在线时间
+                        </td>
+                        <td class="infotdeven"  width="25%" style="border-right: 1.5px solid #6495ED">
+                            {{cpe.time_last_contact}}
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td class="infotdodd"  width="20%">
+                            上行用户名
+                        </td>
+                        <td class="infotdeven"  width="25%">
+                            <input id="c2a_user" style="width:90%;" type="text" name="cpe2acs_username" value="{{cpe.cpe2acs_username}}"/>    
+                        </td>
+                        <td class="infotdodd"  width="20%">
+                            下行用户名
+                        </td>
+                        <td class="infotdeven"  width="25%" style="border-right: 1.5px solid #6495ED">
+                            <input id="a2c_user" style="width:90%;" type="text" name="acs2cpe_username" value="{{cpe.acs2cpe_username}}"/>    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="infotdodd"  width="20%">
+                            上行密码
+                        </td>
+                        <td class="infotdeven"  width="25%">
+                            <input id="c2a_pwd" style="width:90%;" type="text" name="cpe2acs_password" value="{{cpe.cpe2acs_password}}"/>    
+                        </td>
+                        <td class="infotdodd"  width="20%">
+                            下行密码
+                        </td>
+                        <td class="infotdeven"  width="25%" style="border-right: 1.5px solid #6495ED">
+                            <input id="a2c_pwd" style="width:90%;" type="text" name="acs2cpe_password" value="{{cpe.acs2cpe_password}}"/>    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="infotdodd"  width="20%">
+                            设备运营商
+                        </td>
+                        <td class="infotdeven"  width="25%">
+                            <select id="select_isp" name="cpe_operator" style="width:90%">
+                                {% for operator,value in cpe.cpe_operator_list %}
+                                    <option value="{{operator}}" {%ifequal operator cpe.cpe_operator %} selected="selected" {% endifequal %}>{{value}}</option>
+                                {% endfor %}
+                            </select>
+                            
+                        </td>
+                        <td class="infotdodd"  width="20%">
+                            认证方式
+                        </td>
+                        <td class="infotdeven"  width="25%" style="border-right: 1.5px solid #6495ED">
+                            <select name="auth_type" style="width:90%">
+                                {% for auth_type, value in cpe.cpe_auth_type_list %}
+                                    <option value="{{auth_type}}" {%ifequal auth_type cpe.auth_type %} selected="selected" {% endifequal %}>{{value}}</option>
+                                {% endfor %}
+                            </select>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="infotdodd"  width="20%">
+                            运营商版本号
+                        </td>
+                        <td class="infotdeven"  width="25%">
+                            <select id="select_version" name="cpe_isp_version" style="width:90%">
+                                {% for isp_version, value in cpe.list_isp_version %}
+                                    <option value="{{isp_version}}" {%ifequal isp_version cpe.interface_version %} selected="selected" {% endifequal %}>{{value}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="infotdodd"  width="20%">
+                            TR069版本号
+                        </td>
+                        <td class="infotdeven"  width="25%" style="border-right: 1.5px solid #6495ED">
+                            <select name="cwmp_version" style="width:90%">
+                                {% for cwmp_version, value in cpe.cpe_cwmp_version_list %}
+                                    <option value="{{cwmp_version}}" {%ifequal cwmp_version cpe.cwmp_version %} selected="selected" {% endifequal %}>{{value}}</option>
+                                {% endfor %}
+                            </select>                        
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="infotdodd"  width="20%">
+                            设备类型
+                        </td>
+                        <td class="infotdeven"  width="25%">
+                            <select id="select_domain" name="cpe_device_type" style="width:90%">
+                                {% for device_type, value in cpe.cpe_device_type_list %}
+                                    <option value="{{device_type}}" {%ifequal device_type cpe.cpe_device_type %} selected="selected" {% endifequal %}>{{value}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="infotdodd"  width="20%">
+                            工单执行失败回滚
+                        </td>
+                        <td class="infotdeven"  width="25%" style="border-right: 1.5px solid #6495ED">
+                            <select name="worklist_rollback" style="width:90%">
+                                {% for rollback, value in cpe.list_rollback %}
+                                    <option value="{{rollback}}" {%ifequal rollback cpe.cpe_worklist_rollback %} selected="selected" {% endifequal %}>{{value}}</option>
+                                {% endfor %}
+                            </select>                        
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="infotdodd"  width="10%">
+                            <input style="margin-left:20px;" type="submit" name="refresh" value="刷新" />
+                        </td>
+                        <td class="infotdodd" width="10%" style="border-left: 0px solid #6495ED;">
+                            <input style="margin-left:20px;" type="submit" name="submit" value="提交" />
+                        </td>
+                        <td class="infotdodd" colspan="2" style="border-right: 1.5px solid #6495ED;border-bottom: 1.5px solid #6495ED;">
+                            <span>
+                                <a style="color:#4169E1" href="/itms/{{ cpe.cpe_id }}/cpetoworklist/{{revert}}/{{worklist_id}}/">设备工单</a>
+                                <a style="color:#4169E1" href="/itms/{{ cpe.cpe_id }}/1/inquirytasklistresult/{{revert}}/{{worklist_id}}/">设备任务列表</a>
+                                <a style="color:#4169E1" href="/itms/{{ cpe.cpe_id }}/1/soaplogresult/{{revert}}/{{worklist_id}}/">SOAP日志</a>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+
+            <form action="/itms/{{ cpe.cpe_id }}/enterthecpe/{{revert}}/{{worklist_id}}/" method="post" onsubmit="return submitRemoteOpt()">
+                {% csrf_token %}
+                <table width="95%" align="center" cellspacing="0" ,cellpadding="0" ,valign="top" style="margin-top: 30px">
+                    <tr>
+                        <td class="tablelistheader" colspan="3" align="left" >
+                            远程操作
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="infotr2tdodd"  width="20%">
+                            远程操作
+                        </td>
+                        <td  class="infotr2tdeven"  width="25%">
+                            <select id="remoteselect" name="remoteoperate" style="width:90%">
+                                <option value="default" >请选择</option>
+                                <option value="parametersTree" >设备参数树浏览</option>
+                                <option value="RPCMethods" >RPC方法操作</option>
+                            </select>
+                        </td>
+                        <td class="infotr2tdeven" style="border-right: 1.5px solid #6495ED;border-left: 0px solid #6495ED;">
+                            <input style="margin-left:20px;" type="submit" name="confirmOption" value="确定" />
+                        </td>
+                    </tr>
+                    
+                </table>
+            </form>
+            <form action="" method="post">
+                {% csrf_token %}
+                <table width="95%" align="center" cellspacing="0" ,cellpadding="0" ,valign="top" style="margin-top: 30px">
+                    <tr>
+                        <td class="tablelistheader" colspan="3" align="left" >
+                            设备状态信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="infotr2tdodd"  width="20%">
+                            设备在线状态
+                        </td>
+                        <td id="deviceonlinestate" class="infotr2tdeven"  width="10%">
+                            状态未知
+                        </td>
+                        <td class="infotr2tdeven" style="border-right: 1.5px solid #6495ED;border-left: 0px solid #6495ED;">
+                            <input style="margin-left:20px;" type="button" name="inquiryOnline" value="查询" onclick="checkStatus()"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div style="clear:both;margin-top:30px;">
+            
+        </div>
+        
+        {% block divbottom %}
+        {% endblock %}
+    </div>
+</body>
+</html>
+    

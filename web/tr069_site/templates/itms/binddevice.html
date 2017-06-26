@@ -1,0 +1,148 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+{% load staticfiles %}
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="/static/common.css" rel="stylesheet" type="text/css" />
+	<script src="/static/admin/js/jquery.js" type="text/javascript"></script>
+	<style type="text/css"></style>
+</head>
+<body>
+    <div class="divpanelcontent" style="overflow: auto">
+		<div style="width: 95%;height: 30px">
+		    <input style="float: right" type="submit" name="revert" value="返回" onclick="backtoworklistresult()"/>	
+		    {% if revert == "yes" %}
+			<input style="float: right" type="submit" name="pagehome" value="首页" onclick="homepagetocpe()" />
+		    {% else %}
+			<input style="float: right" type="submit" name="pagehome" value="首页" onclick="homepagetoworklist()" />
+		    {% endif %}
+		</div>
+		<div style="clear:both;">
+			<form action="/itms/{{ worklist_id }}/binddevice/{{revert}}/" method="post">
+                {% csrf_token %}
+                <table width="95%" align="center" cellspacing="0" ,cellpadding="0" ,valign="top">
+                    
+                    <tr>
+                        <td class="tablelistheader" colspan="3" align="left" >
+                        查询绑定设备:
+                        </td>
+                    </tr>
+                    
+                     
+                    <tr>
+                        <td class="infotr2tdodd"  width="40%">
+                            设备SN号
+                        </td>
+                        
+                        <td class="infotr2tdeven"  style="border-right: 1.5px solid #6495ED">
+                            <input id="sn_bind_device" style="width:90%;" type="text" name="sn_bind_device" value="{{input_sn}}"/>	
+                        </td>
+                    </tr>
+        
+                </table>
+                </br>
+                <div style="width: 95%">
+                    <input style="float: right" type="submit" name="confirm" value="绑定" onClick="return inputSN()"/>
+                    <input style="float: right" type="submit" name="inquiry" value="查询" />
+                </div>
+                </br>
+                </br>
+                <table width="95%" align="center" cellspacing="0" ,cellpadding="0" ,valign="top",style="overflow: auto">
+                
+                    <tr>
+                        <td class="tablelistheader" align="left" >
+                        设备序列表:
+                        </td>
+                    </tr>
+                    
+                     
+                    <tr>
+                        <td class="infotr2tdodd"  style="border-right: 1.5px solid #6495ED">
+                            设备标识
+                        </td>
+                        
+                    </tr>
+                    {% if enter_bind_page == "yes" %}
+					
+					{% else %}
+						{% if inquiry_cpe_result_list %}
+						
+							{% for sn in inquiry_cpe_result_list  %}
+								<tr>
+									<td  class="infotdeven"  style="border-right: 1.5px solid #6495ED">
+										<input id="{{sn}}" type="radio" name="sn_radio" value="{{sn}}" />
+										{{sn}}
+									</td>
+									
+								</tr>
+							{% endfor %}
+						{% else %}
+							<tr>
+								<td colspan="6" style="font-size: 13px">
+									未查找到相关设备
+								</td>
+							</tr>
+						{% endif %}
+						
+					{% endif %}
+                </table>
+            </form>
+		</div>
+		<div style="clear:both;margin-top:20px;">
+			
+		</div>
+		
+		<script>
+			
+			function inputSN () {
+				
+				var select_sn = GetRadioValue("sn_radio")
+			    
+				if (select_sn == null) {
+					alert("请选择要绑定的SN号")
+					return false;
+				} else {
+					if(confirm("是否执行设备绑定操作")) {
+						return true;
+					} else {
+						return false;
+					}	
+				}
+					
+			}
+
+			function GetRadioValue(RadioName){
+				var obj;    
+				obj=document.getElementsByName(RadioName);
+				if(obj!=null){
+					var i;
+					for(i=0;i<obj.length;i++){
+						if(obj[i].checked){
+							return obj[i].value;            
+						}
+					}
+				}
+				return null;
+			}
+			
+			function homepagetoworklist(){
+			    var homepage_url =  "/itms/inquiryworklist/";
+			    location.replace(homepage_url)
+			}
+			function homepagetocpe(){
+			    var homepage_url =  "/itms/inquirycpe/";
+			    location.replace(homepage_url)
+			}
+			
+			function backtoworklistresult(){
+			    var backto = "/itms/{{worklist_id}}/theworklistinfo/{{revert}}"
+			    location.replace(backto)
+			}
+			
+			
+		</script>
+    </div>
+</body>
+</html>
+    

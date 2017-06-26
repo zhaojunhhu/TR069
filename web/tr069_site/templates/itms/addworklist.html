@@ -1,0 +1,136 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+    {% load staticfiles %}
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/js/ext/resources/css/ext-all.css' %}"/>
+	<script type="text/javascript" src="{% static 'admin/js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'admin/js/ext/ext-all.js' %}"></script>
+    <script type="text/javascript" src="{% static 'admin/js/worklist.js' %}"></script>
+    <script>
+        var str_worklist_isp = "{{list_worklist_isp}}".replace(/u&#39;/g,"'").replace(/&#39;/g,"'");
+        try{
+            var list_worklist_isp      = eval("("+str_worklist_isp+")")
+        }catch(e){
+            alert("解析工单数据信息失败！,详细信息："+e)
+        }
+
+        function homepagetoworklist(){
+	    var homepage_url =  "/itms/inquiryworklist/";
+	    location.replace(homepage_url)
+	}
+        function homepagetocpe(){
+	    var homepage_url =  "/itms/inquirycpe/";
+	    location.replace(homepage_url)
+	}
+	function backtocpetoworklist(){
+	    var backto = "/itms/1/inquiryworklistresult/{{revert}}/?inquirytype=all&inquiry=%E6%9F%A5%E8%AF%A2&inputpage=1"
+	    location.replace(backto)
+	}
+	function backtoworklist(){
+	    var backto = "/itms/inquiryworklist/"
+	    location.replace(backto)
+	}
+    </script>
+    <style type="text/css">
+        .args_table
+        {
+            border-collapse:separate;
+            border-spacing:10px
+        }
+        .ext-ie .x-tree .x-panel-body
+            {position: relative;}
+        .ext-ie .x-tree .x-tree-root-ct
+            {position: absolute;}
+
+		.worklist_samp{
+			float: right;
+		}
+
+    </style>
+
+</head>
+<body>
+    <div id="div" style="width:100%;height:35px;padding:5px">
+        {% if revert == "yes" %}
+	    <input style="float: right;width:50px;height:25px;margin-right:40px;" type="submit" name="revert" value="取消" onClick="backtocpetoworklist()"/>
+	    <input style="float: right;width:50px;height:25px;margin-right:10px;" type="submit" name="pagehome" value="首页" onclick="homepagetocpe()" />
+	{% else %}
+	    <input style="float: right;width:50px;height:25px;margin-right:40px;" type="submit" name="revert" value="取消" onClick="backtoworklist()"/>
+            <input style="float: right;width:50px;height:25px;margin-right:10px;" type="submit" name="pagehome" value="首页" onclick="homepagetoworklist()" />
+        {% endif %}
+
+        <div id="loadbar" style="height:20px; float: right;">
+            <img src="{%static 'load.bmp' %}"/ >
+        </div>
+    </div>
+    <div id="worklist-div"  style="width:18%; height: 600px; float: left;"></div>
+    <div id="args-div"   style="width: 80%; height: 600px; float:left; font-size: 14px;" >
+        <form id="form_id" action="/itms/init_worklist/" method="get" style="width:100%; height:100%">
+            <div id="worklist_title_label"  style=" background-color:#D3E0F1; width:100%; height:40px" align="center">
+                <div id="worklist_title" style="text-align:center;float:left;width:80%; ">当前工单:无</div>
+            </div>
+            <div id="args_div" style="width:100%; height:340px;overflow:auto">
+                <table class="args_table" id="args_table_id"  style="margin-top:5%; margin-left:20%">
+                    <tr  align="center" >
+                        <td>
+                            <img src={% static 'warning.bmp' %} align="right"></img>
+                        </td>
+                        <td align="center" background={%static 'head.bmp' %} style="font-size: 20px;color:#4169E1">
+                            请选择要添加的工单
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="physic_or_logic_div"  style="width:100%; height:120px">
+                <hr style="color:#D3E0F1">
+                <table align="left" style="margin-left:20%; width:400px">
+                    <tr align="left">
+                        <td style="font-size:20px; color:#4169E1">
+                            <input id="radio_physic_id" name="worklist_type_redio" type="radio" value="physic" checked="true" onClick="showHiddenLogicArgs(this)">
+                            物理工单
+                        </td>
+                        <td style="font-size:20px;color:#4169E1">
+                            <input name="worklist_type_redio" type="radio" value="logic" onClick="showHiddenLogicArgs(this)">
+                            逻辑工单
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="height:5px">
+                            &nbsp
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <table align="left" id="physic_or_logic_args_div" style="border-collapse:separate;border-spacing:10px">
+                                <tr align="left">
+                                    <td>逻辑ID:</td>
+                                    <td><input type="text" width="200px" name="username"></td>
+                                </tr>
+                                <tr align="left">
+                                    <td>逻辑Key:</td>
+                                    <td><input type="text" width="200px" name="userid"></td>
+                                </tr>
+                          </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="submit_div" align="right" style="width:100%;height:40px;" >
+                <hr style="color:#D3E0F1">
+                <input id="submit_id" style="width:50px;height:25px;margin-right:20px;" onClick="addWorklist()" type="button" value="提交" />
+            </div>
+
+    </form>
+    </div>
+
+    <script>
+        $("#loadbar").hide();
+        $('#physic_or_logic_div').hide();
+        $('#physic_or_logic_args_div').hide();
+    </script>
+
+</body>
+</html>

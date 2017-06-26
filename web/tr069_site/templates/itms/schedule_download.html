@@ -1,0 +1,156 @@
+{% extends "itms/rpcmethodbase.html" %}
+{% load staticfiles %}
+{% block colorchange %}
+<script>
+	document.getElementById("schedule_download").style.color="#00FFFF"
+</script>
+{% endblock %}
+{% block therpc %}
+<div style="width:90%;height:55px;margin-top:10px;margin-left:5%;line-height:40px;overflow:hidden;color:#FFFFFF;
+    text-indent:30px;background-image:url({% static 'rpcparameterpic.bmp' %});background-repeat:no-repeat;font-weight:bold">
+    ScheduleDownload 参数列表
+</div>
+<div style="width:90%;height:280px;margin-left:5%;overflow:auto;">
+	<form id="form_id">
+		<div style="width:95%;height:200px;margin-left:5%;overflow:auto;">
+			<table cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;">
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						CommandKey:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="CommandKey" />	
+					</td>
+					<td style="font-size: 15px;">
+						(可选参数)
+					</td>
+					
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						FileType:
+					</td>
+					<td style="width:50%">
+						<select name="FileType" style="width:97%;">
+							<option value="1 Firmware Upgrade Image">1 Firmware Upgrade Image</option>
+							<option value="2 Web Content">2 Web Content</option>
+							<option value="3 Vendor Configuration File">3 Vendor Configuration File</option>
+							<option value="4 Tone File">4 Tone File</option>
+							<option value="5 Ringer File">5 Ringer File</option>
+							<option value="X &lt;VENDOR&gt; &lt;Vendor-specific identifier&gt;">X &lt;VENDOR&gt; &lt;Vendor-specific identifier&gt</option>
+						</select>	
+					</td>
+					<td>
+					</td>
+					
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						URL:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="URL" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						Username:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="Username" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						Password:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="Password" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						FileSize:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="FileSize" value="0" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						TargetFileName:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="TargetFileName" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						TimeWindowList:
+					</td>
+					<td style="width:50%">
+						
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						----WindowStart:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="WindowStart" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						----WindowEnd:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="WindowEnd" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:22%;height:30px;text-align: left">
+						----WindowMode:
+					</td>
+					<td style="width:50%">
+						<select name="WindowMode" style="width:97%;">
+							<option value="1 At Any Time">1 At Any Time</option>
+							<option value="2 Web Content">2 Web Content</option>
+							<option value="3 When Idle">3 When Idle</option>
+							<option value="4 Confirmation Needed">4 Confirmation Needed</option>
+							<option value="X &lt;VENDOR&gt; &lt;Vendor-specific identifier&gt;">X &lt;VENDOR&gt; &lt;Vendor-specific identifier&gt</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						----UserMessage:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="UserMessage" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						----MaxRetries:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="MaxRetries" />
+					</td>
+				</tr>
+			</table>	
+		</div>
+		<div style="width:95%;height:50px;margin-left:5%;float:bottom">
+			<table id="table2" cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;margin-top:30px">
+				<tr>
+				    <td colspan="2" style="width:80%">	
+					</td>
+					<td>
+						<input style="margin-left:20px;width:60px;height:30px;" type="button" onclick="sendAjaxRequest(this)" name="ScheduleDownload" value="提交" />
+					</td>
+			    </tr>
+			</table>
+		</div>
+	</form>	
+</div>
+{% endblock %}

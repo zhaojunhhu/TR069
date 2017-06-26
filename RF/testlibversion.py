@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+VERSION = 'v2.3.1'
+SVN_URL = 'http://svn.attrobot.com:800/ATT/Python/TR069/Branch/v2.3'
+SVN_VERSION = '1768'
+SVN_LAST_COMMIT_TIME = '2013-10-21 13:43:24'
+VERSION_PACK_TIME = '2013-10-21 14:27:32'
+BASE_PLATFORM_VERSION = "v.beta131021.svn1766"

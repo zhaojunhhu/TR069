@@ -1,0 +1,291 @@
+{% extends "itms/rpcmethodbase.html" %}
+{% load staticfiles %}
+{% block colorchange %}
+<script>
+	document.getElementById("set_parameter_attributes").style.color="#00FFFF"
+</script>
+{% endblock %}
+{% block therpc %}
+<div style="width:90%;height:55px;margin-top:10px;margin-left:5%;line-height:40px;overflow:hidden;color:#FFFFFF;
+    text-indent:30px;background-image:url({% static 'rpcparameterpic.bmp' %});background-repeat:no-repeat;font-weight:bold">
+    SetParameterAttributes 参数列表
+</div>
+<div style="width:90%;height:280px;margin-left:5%;overflow:auto;">
+	<form id="form_id">
+		<div style="width:95%;height:200px;margin-left:5%;overflow:auto;">
+			<table id="table1" cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;">
+				<tr>
+					<td style="width:25%;height:30px;text-align: left">
+						Name:
+					</td>
+					<td style="width:40%">
+						<input style="width:95%;" type="text" name="Name_1" />	
+					</td>
+					<td>
+					</td>
+					
+				</tr>
+				<tr>
+					<td style="width:25%;height:30px;text-align: left">
+						NotificationChange:
+					</td>
+					<td style="width:40%">
+						<select name="NotificationChange_1" style="width:97%;">
+							<option value="True">True</option>
+							<option value="False" selected="selected">False</option>
+							<option value="0">0</option>
+							<option value="1">1</option>
+						</select>	
+					</td>
+					<td >
+					</td>
+				</tr>
+				<tr>
+					<td style="width:25%;height:30px;text-align: left">
+						Notification:
+					</td>
+					<td style="width:40%">
+						<select name="Notification_1" style="width:97%;">
+							<option value="0" selected="selected">0</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+						</select>	
+					</td>
+					<td>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:25%;height:30px;text-align: left">
+						AccessListChange:
+					</td>
+					<td style="width:40%">
+						<select name="AccessListChange_1" style="width:97%;">
+							<option value="True">True</option>
+							<option value="False" selected="selected">False</option>
+							<option value="0">0</option>
+							<option value="1">1</option>
+						</select>	
+					</td>
+					<td>
+					</td>	
+				</tr>
+				<tr>
+					<td style="width:25%;height:30px;text-align: left">
+						AccessList:
+					</td>
+					<td style="width:40%">
+						
+					    <select name="AccessList_1" style="width:97%;">
+							<option value="SubScriber" selected="selected">SubScriber</option>
+							<option value="Empty">Empty</option>	
+						</select>
+					</td>
+					<td style="font-size: 15px;padding-top:10px">
+						<img src={% static 'addico.bmp' %} align="left" ondblclick=operationAdd()></img>
+						(双击图片添加多组配置)
+					</td>
+				</tr>
+				<tr>
+					<td style="width:25%;height:20px;text-align: left">
+						
+					</td>
+					<td style="width:40%;font-size:15px;">
+						(如有多个参数请添加',')
+					</td>
+					<td >
+					</td>
+				</tr>
+			</table>
+		</div>	
+		<div style="width:95%;height:50px;margin-left:5%;float:bottom">
+			<table id="table2" cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;margin-top:30px">
+				<tr>
+				    <td colspan="2" style="width:80%">	
+					</td>
+					<td>
+						<input style="margin-left:20px;width:60px;height:30px;" type="button" onclick="sendAjaxRequest(this)" name="SetParameterAttributes" value="提交" />
+					</td>
+			    </tr>
+			</table>
+		</div>
+	</form>
+	<script>
+		
+		var parameter_num   = 1
+		
+		function addParameterStruct() {
+			
+			var Name = "Name" + "_" + parameter_num
+			var NotificationChange = "NotificationChange" + "_" + parameter_num
+			var Notification = "Notification" + "_" + parameter_num
+			var AccessListChange = "AccessListChange" + "_" + parameter_num
+			var AccessList = "AccessList" + "_" + parameter_num
+			
+			NotificationChange_selects = {"True":"True","False":"False","0":"0","1":"1"}
+			Notification_selects = {"0":"0","1":"1","2":"2"}
+			AccessListChange_selects = {"True":"True","False":"False","0":"0","1":"1"}
+			AccessList_selects = {"SubScriber":"SubScriber","Empty":"Empty"}
+			
+			addTheTr(Name,"Name:","td2_Name",Name,"")
+			
+			addTrCombobox(NotificationChange,"NotificationChange:","td2_NotificationChange",NotificationChange,NotificationChange_selects,"False")
+			addTrCombobox(Notification,"Notification:","td2_Notification",Notification,Notification_selects,"0")
+			addTrCombobox(AccessListChange,"AccessListChange:","td2_AccessListChange",AccessListChange,AccessListChange_selects,"False")
+			addTrCombobox(AccessList,"AccessList:","td2_AccessList",AccessList,AccessList_selects,"SubScriber")
+			
+	    
+		}
+
+		function addDivide() {
+			
+			// 获取parent
+			var element=document.getElementById("table1");
+			
+			// 提示行
+			var tr_divide = document.createElement("tr");
+			var tmp_tr_divide_id = "divide" + "_" + parameter_num
+			tr_divide.setAttribute("id" ,tmp_tr_divide_id)
+			
+			element.appendChild(tr_divide)
+			
+			//信息行
+			var td = document.createElement("td");
+			td.setAttribute("style","width:25%;height:40px;text-align: left")
+			td.setAttribute("colspan","2")
+			
+			var divide_content = "**********************************"
+			var td_text = document.createTextNode(divide_content);
+			td.appendChild(td_text);
+			
+			tr_divide.appendChild(td)
+			
+		}
+		
+		function addTheTr(tr_id,td1_text,td2_id,td2_input_name,td2_input_value) {
+			
+			// 获取parent
+			var element=document.getElementById("table1");
+			
+			// 行
+			var tr = document.createElement("tr");
+			tr.setAttribute("id",tr_id)
+			element.appendChild(tr);
+			
+			// 第一列
+			var td1 = document.createElement("td");
+			td1.setAttribute("style","width:25%;height:30px;text-align: left")
+			
+			var td1text = document.createTextNode(td1_text);
+			td1.appendChild(td1text);
+			
+			tr.appendChild(td1)
+			
+			// 第二列
+			var td2 = document.createElement("td");
+			td2.setAttribute("id",td2_id)
+			td2.setAttribute("style","width:40%")
+			
+			tr.appendChild(td2)
+			
+			var td2_input = document.createElement("input");
+			td2_input.setAttribute("type","text")
+			td2_input.setAttribute("name",td2_input_name)
+			td2_input.setAttribute("value",td2_input_value)
+			td2_input.setAttribute("style","width:95%")
+			
+			td2.appendChild(td2_input)
+			
+		}
+		function addTrCombobox(tr_id,td1_text,td2_id,td2_select_name,td2_select_options,selected) {
+			
+			// 获取parent
+			var element=document.getElementById("table1");
+			
+			// 行
+			var tr = document.createElement("tr");
+			tr.setAttribute("id",tr_id)
+			element.appendChild(tr);
+			
+			// 第一列
+			var td1 = document.createElement("td");
+			td1.setAttribute("style","width:25%;height:30px;text-align: left")
+			
+			var td1text = document.createTextNode(td1_text);
+			td1.appendChild(td1text);
+			
+			tr.appendChild(td1)
+			
+			// 第二列
+			var td2 = document.createElement("td");
+			td2.setAttribute("id",td2_id)
+			td2.setAttribute("style","width:40%")
+			
+			tr.appendChild(td2)
+			
+			var td2_select = document.createElement("select");
+			td2_select.setAttribute("name",td2_select_name)
+			td2_select.setAttribute("style","width:97%")
+			
+			td2.appendChild(td2_select)
+			
+			for (i in td2_select_options)
+			{
+				var tmpOption = document.createElement("option");
+				tmpOption.setAttribute("value",i)
+					
+				var tmpOptiontext = document.createTextNode(td2_select_options[i]);
+				tmpOption.appendChild(tmpOptiontext);
+					
+				td2_select.appendChild(tmpOption)
+			}
+			td2_select.value = selected
+		
+		}
+		
+		function addNullLine(tr_id) {
+			
+			// 获取parent
+			var element=document.getElementById("table1");
+			
+			// 行
+			var tr = document.createElement("tr");
+			tr.setAttribute("id",tr_id)
+			element.appendChild(tr);
+			
+			// 第一列
+			var td1 = document.createElement("td");
+			td1.setAttribute("style","width:25%;height:20px;text-align: left")
+			
+			var td1_text = document.createTextNode(" ");
+			td1.appendChild(td1_text);
+			
+			tr.appendChild(td1)
+			
+			// 第二列
+			var td2 = document.createElement("td");
+			td2.setAttribute("style","width:40%;font-size:15px;")
+			
+			var td2_text = document.createTextNode("(如有多个参数请添加',')");
+			td2.appendChild(td2_text);
+			
+			tr.appendChild(td2)
+			
+			
+		}
+		
+		function operationAdd() {
+			
+			parameter_num++
+			
+			var nullLine = "Null" + "_" + parameter_num
+
+			addDivide()
+			addParameterStruct()
+			addNullLine(nullLine)
+			
+			
+		}
+		
+	</script>
+</div>
+{% endblock %}

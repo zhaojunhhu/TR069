@@ -1,0 +1,14 @@
+{% extends "itms/rpcmethodbase.html" %}
+{% load staticfiles %}
+{% block therpc %}
+<table cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;margin-top:60px;">
+    <tr>
+        <td style="width:15%">
+            <img src={% static 'warning.bmp' %} align="right"></img>
+        </td>
+        <td>
+            请选择要执行的RPC方法
+            </td>
+    </tr>
+</table>
+{% endblock %}

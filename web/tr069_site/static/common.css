@@ -1,0 +1,214 @@
+    .divtitle
+    {
+        width: 100%;
+        height: 63px;
+        background-image: url("./topbackground.bmp");
+        background-repeat: repeat
+    }
+    
+    .titledes
+    {
+        font-family: cursive;
+        font-size: 33px;
+        color: #DCDCDC;
+        font-weight: bold
+    }
+    
+    .logout
+    {
+        text-align: right;
+        vertical-align: top;
+        padding: 4px;
+    }
+    
+    .homepage
+    {
+        color: #FFFFFF;
+        text-align: right;
+        vertical-align: top;
+        padding-top: 8px;
+    }
+    
+    .divgps
+    {
+    height: 34px;
+    background-image: url("./leadbar.bmp");
+    background-repeat: no-repeat;
+    background-position: center;
+    font-family: 华文楷体;
+    padding-top: 6px;
+    margin-top: 6px;
+    color: #4169E1;
+    font-style: italic;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    }
+    
+    .inquiryresult_link:link,.inquiryresult_link:visited
+    {
+    text-decoration: none;
+    color: #4169E1;
+    }
+
+    .inquiryresult_link:hover,.inquiryresult_link:active
+    {
+    text-decoration: underline;
+    }
+    
+    .divleftcontent
+    {
+    background-color: #FFFFFF;
+    height: 700px;
+    width: 15%;
+    float: left;
+    }
+    
+    .divrightcontent
+    {
+    height: 700px;
+    width: 85%;
+    float: right
+    }
+    
+    .divpanelcontent
+    {
+        height: 670px;
+        width: 100%;
+        
+    }
+    
+    .tablelistitem
+    {
+        height: 20px;
+        font-size: 13px;
+        border-top: 1px solid #778899;
+        border-bottom: 1px solid #778899;
+        border-left: 1px solid #778899;
+        border-right: 0px solid #778899;
+        background-color: #ADD8E6;
+    }
+    
+    .tablelistheader
+    {
+        height: 30px;
+        background-image: url("./devicelistbackpic.bmp");
+        text-indent:25px;
+        color: #4169E1;
+        font-size: 14px;
+        background-position: center;
+        background-repeat: repeat;
+        
+    }
+    
+    .tablelisttd1
+    {
+        border-top: 0px solid #778899;
+        border-bottom: 1px solid #778899;
+        border-left: 1px solid #778899;
+        border-right: 0px solid #778899;
+        height:25px;
+        font-size: 14px;
+        
+    }
+    
+    .tablelisttd2
+    {
+        border-top: 0px solid #778899;
+        border-bottom: 1px solid #778899;
+        border-left: 1px solid #778899;
+        border-right: 0px solid #778899;
+        height:25px;
+        font-size: 13px;
+        
+    }
+    .tablelisttd3
+    {
+        border-top: 0px solid #778899;
+        border-bottom: 1px solid #778899;
+        border-left: 1px solid #778899;
+        border-right: 0px solid #778899;
+        height:25px;
+        font-size: 13px;
+        
+    }
+    .tablelisttd4
+    {
+        border-top: 0px solid #778899;
+        border-bottom: 1px solid #778899;
+        border-left: 1px solid #778899;
+        border-right: 0px solid #778899;
+        height:25px;
+        font-size: 13px;
+        
+    }
+    .tablelisttd5
+    {
+        border-top: 0px solid #778899;
+        border-bottom: 1px solid #778899;
+        border-left: 1px solid #778899;
+        border-right: 0px solid #778899;
+        height:25px;
+        font-size: 13px;
+        
+    }
+    .tablelisttd6
+    {
+        border-top: 0px solid #778899;
+        border-bottom: 1px solid #778899;
+        border-left: 1px solid #778899;
+        border-right: 0px solid #778899;
+        height:25px;
+        font-size: 13px;
+        
+    }
+    
+    .infotr2tdodd
+    {
+        height:25px;
+        font-size: 14px;
+        text-indent: 20px;
+        background-color: #ECF4FE;
+        border-top: 1.5px solid #6495ED;
+        border-bottom: 1.5px solid #6495ED;
+        border-left: 1.5px solid #6495ED;
+        border-right: 0px solid #6495ED;
+    
+    }
+    
+    .infotr2tdeven
+    {
+        height:25px;
+        font-size: 14px;
+        text-indent: 20px;
+        border-top: 1.5px solid #6495ED;
+        border-bottom: 1.5px solid #6495ED;
+        border-left: 1.5px solid #6495ED;
+        border-right: 0px solid #6495ED;
+    
+    }
+    
+    .infotdodd
+    {
+        height:25px;
+        font-size: 14px;
+        text-indent: 20px;
+        background-color: #ECF4FE;
+        border-top: 0px solid #6495ED;
+        border-bottom: 1.5px solid #6495ED;
+        border-left: 1.5px solid #6495ED;
+        border-right: 0px solid #6495ED;
+    
+    }
+    
+    .infotdeven
+    {
+        height:25px;
+        font-size: 14px;
+        text-indent: 20px;
+        border-top: 0px solid #6495ED;
+        border-bottom: 1.5px solid #6495ED;
+        border-left: 1.5px solid #6495ED;
+        border-right: 0px solid #6495ED;
+    
+    }

@@ -1,0 +1,90 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+   
+{% load staticfiles %}
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+</style>
+<title>TR069测试平台</title>
+<script>
+    // 自适应屏幕大小
+    self.moveTo(0.0)
+    self.resizeTo(screen.availWidth,screen.availHeight)
+	
+	function no_back() {
+		window.location.replace("")
+   }
+</script>
+</head>
+<body style="background-color: #4682B4;">
+	<form method="post" action="{{ app_path }}">
+	{% csrf_token %}
+    <table cellpadding="0" cellspacing="0" align="center"
+           style="background-image: url({% static 'login.jpg' %});width: 720px;height: 400px;margin-top:200px;outline-style:outset;outline-color:#FFFFFF;">
+        <tr>
+            <td colspan="2" style="height:70px;font-family:幼圆;font-size:32px;color:#00008B;font-weight:bold;
+            background-image:url({% static 'loginlogo.bmp' %});background-repeat:no-repeat;text-align: center;text-indent:80px">
+                TR069测试平台
+            </td>
+        </tr>
+        <tr>
+            <td style="width:35%">
+
+            </td>
+            <td>
+                <table cellspacing="20px">
+					<tr>
+						<td/>
+						<td>
+							{% if errors %}
+							<ul>
+							{% for error in errors %}
+							<p style="width:150px;text-align:left;color:red;">{{ error }}</p>
+							{% endfor %}
+							</ul>
+							{% endif %}    
+                        </td>
+					</tr>
+                    <tr>
+                        <td style="width:150px;background-repeat:no-repeat;
+                        text-align:right;font-weight: bold;padding-top:10px;letter-spacing:5px;color:#FFFFFF">
+                            用户名:
+                        </td>
+                        <td>
+                            <input id="id_username" type="text" name="username" value="{{user_name}}" style="height:23px;width:150px">
+                                
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:150px;background-repeat:no-repeat;
+                        text-align:right;font-weight: bold;padding-top:10px;letter-spacing:5px;color:#FFFFFF">
+                            密 码:
+                        </td>
+                        <td>
+                            <input id="id_password" type="password" name="password" style="height:23px;width:150px;">
+                        </td>
+                    </tr>
+                    <tr>
+						<td>
+						
+						</td>
+                        <td style="height:50px">
+                            <input align="left" value="登录" type="submit" onClick="no_back()" style="width:90px;margin-right:20px;
+                            text-align:center;background-repeat:no-repeat;font-size:18px;cursor:hand">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        
+    </table>
+	</form>
+	
+	<script type="text/javascript">
+	document.getElementById('id_username').focus()
+	</script>
+
+</body>
+</html>

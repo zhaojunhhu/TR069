@@ -1,0 +1,207 @@
+{% extends "itms/rpcmethodbase.html" %}
+{% load staticfiles %}
+{% block colorchange %}
+<script>
+	document.getElementById("change_du_state").style.color="#00FFFF"
+</script>
+{% endblock %}
+{% block therpc %}
+<div style="width:90%;height:55px;margin-top:10px;margin-left:5%;line-height:40px;overflow:hidden;color:#FFFFFF;
+    text-indent:30px;background-image:url({% static 'rpcparameterpic.bmp' %});background-repeat:no-repeat;font-weight:bold">
+    ChangeDUState 参数列表
+</div>
+<div style="width:90%;height:280px;margin-left:5%;overflow:auto;">
+	<form id="form_id">
+		<div style="width:95%;height:200px;margin-left:5%;overflow:auto;">
+			
+			<table id="table1" cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;">
+				<tr>
+					<td style="width:25%;height:30px;text-align: left">
+						CommandKey:
+					</td>
+					<td style="width:40%">
+						<input style="width:95%;" type="text" name="CommandKey" />	
+					</td>
+					<td style="font-size: 15px;">
+					(可选参数)
+					</td>
+					<td>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:25%;height:30px;text-align: left">
+						Operations:
+					</td>
+					<td style="width:40%">
+						
+					</td>
+					<td>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:25%;height:40px;text-align: left">
+						OperationStruct:
+					</td>
+					<td style="width:40%">
+						<select id="operationStruct" name="operationStruct" style="width:97%;" >
+							
+							<option value="InstallOpStruct" selected="selected">InstallOpStruct</option>
+							<option value="UpdateOpStruct">UpdateOpStruct</option>
+							<option value="UninstallOpStruct">UninstallOpStruct</option>
+						</select>
+					</td>
+					<td style="font-size: 15px;padding-top:10px">
+						<img src={% static 'addico.bmp' %} align="left" ondblclick=operationStructFunc()></img>
+						(双击图片添加配置)
+					</td>
+				</tr>
+			</table>
+		</div>
+        <div style="width:95%;height:50px;margin-left:5%;float:bottom">
+			<table id="table2" cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;margin-top:30px">
+				<tr>
+				    <td colspan="2" style="width:80%">	
+					</td>
+					<td>
+						<input style="margin-left:20px;width:60px;height:30px;" type="button" onclick="sendAjaxRequest(this)" name="ChangeDUState" value="提交" />
+					</td>
+			    </tr>
+			</table>
+		</div>
+            
+	</form>
+	<script>
+		
+		var install_num   = 0
+		var update_num    = 0
+		var uninstall_num = 0
+		
+		function addInstallOpStruct() {
+			
+			var URL_InstallOpStruct = "URL_InstallOpStruct" + "_" + install_num
+			var UUID_InstallOpStruct = "UUID_InstallOpStruct" + "_" + install_num
+			var Username_InstallOpStruct = "Username_InstallOpStruct" + "_" + install_num
+			var Password_InstallOpStruct = "Password_InstallOpStruct" + "_" + install_num
+			var ExecutionEnvRef_InstallOpStruct = "ExecutionEnvRef_InstallOpStruct" + "_" + install_num
+			
+			addTheTr(URL_InstallOpStruct,"-----URL:","td2_url_InstallOpStruct",URL_InstallOpStruct)
+			addTheTr(UUID_InstallOpStruct,"-----UUID:","td2_uuid_InstallOpStruct",UUID_InstallOpStruct)
+			addTheTr(Username_InstallOpStruct,"-----Username:","td2_username_InstallOpStruct",Username_InstallOpStruct)
+			addTheTr(Password_InstallOpStruct,"-----Password:","td2_password_InstallOpStruct",Password_InstallOpStruct)
+			addTheTr(ExecutionEnvRef_InstallOpStruct,"-----ExecutionEnvRef:","td2_executionEnvRef_InstallOpStruct",ExecutionEnvRef_InstallOpStruct)
+            
+		}
+		function addUpdateOpStruct() {
+			
+			var UUID_UpdateOpStruct = "UUID_UpdateOpStruct" + "_" + update_num
+			var Version_UpdateOpStruct = "Version_UpdateOpStruct" + "_" + update_num
+			var URL_UpdateOpStruct = "URL_UpdateOpStruct" + "_" + update_num
+			var Username_UpdateOpStruct = "Username_UpdateOpStruct" + "_" + update_num
+			var Password_UpdateOpStruct = "Password_UpdateOpStruct" + "_" + update_num
+			
+			addTheTr(UUID_UpdateOpStruct,"-----UUID:","td2_uuid_UpdateOpStruct",UUID_UpdateOpStruct)
+			addTheTr(Version_UpdateOpStruct,"-----Version:","td2_version_UpdateOpStruct",Version_UpdateOpStruct)
+			addTheTr(URL_UpdateOpStruct,"-----URL:","td2_url_UpdateOpStruct",URL_UpdateOpStruct)
+			addTheTr(Username_UpdateOpStruct,"-----Username:","td2_username_UpdateOpStruct",Username_UpdateOpStruct)
+			addTheTr(Password_UpdateOpStruct,"-----Password:","td2_password_UpdateOpStruct",Password_UpdateOpStruct)
+            
+		}
+		
+		function addUninstallOpStruct() {
+			
+			var UUID_UninstallOpStruct = "UUID_UninstallOpStruct" + "_" + uninstall_num
+			var Version_UninstallOpStruct = "Version_UninstallOpStruct" + "_" + uninstall_num
+			var ExecutionEnvRef_UninstallOpStruct = "ExecutionEnvRef_UninstallOpStruct" + "_" + uninstall_num
+			
+			addTheTr(UUID_UninstallOpStruct,"-----UUID:","td2_uuid_UninstallOpStruct",UUID_UninstallOpStruct)
+			addTheTr(Version_UninstallOpStruct,"-----Version:","td2_version_UninstallOpStruct",Version_UninstallOpStruct)
+			addTheTr(ExecutionEnvRef_UninstallOpStruct,"-----ExecutionEnvRef:","td2_executionEnvRef_UninstallOpStruct",ExecutionEnvRef_UninstallOpStruct)
+			
+		}
+		
+		function addStruct(struct) {
+			
+			// 获取parent
+			var element=document.getElementById("table1");
+			
+			// 提示行
+			var tr_struct = document.createElement("tr");
+			var tmp_tr_struct_id = struct + "_message"
+			tr_struct.setAttribute("id" ,tmp_tr_struct_id)
+			
+			element.appendChild(tr_struct)
+			
+			//信息行
+			var td_struct = document.createElement("td");
+			td_struct.setAttribute("style","width:25%;height:30px;text-align: left")
+			td_struct.setAttribute("colspan","2")
+			
+			var struct_content = "****" + struct + "****"
+			var td_struct_text = document.createTextNode(struct_content);
+			td_struct.appendChild(td_struct_text);
+			
+			tr_struct.appendChild(td_struct)
+			
+		}
+		
+		function addTheTr(tr_id,td1_text,td2_id,td2_input_name) {
+			
+			// 获取parent
+			var element=document.getElementById("table1");
+			
+			// 行
+			var tr_url = document.createElement("tr");
+			tr_url.setAttribute("id",tr_id)
+			element.appendChild(tr_url);
+			
+			// 第一列
+			var td1_url = document.createElement("td");
+			td1_url.setAttribute("style","width:25%;height:30px;text-align: left")
+			
+			var td1_url_text = document.createTextNode(td1_text);
+			td1_url.appendChild(td1_url_text);
+			
+			tr_url.appendChild(td1_url)
+			
+			// 第二列
+			var td2_url = document.createElement("td");
+			td2_url.setAttribute("id",td2_id)
+			td2_url.setAttribute("style","width:40%")
+			
+			tr_url.appendChild(td2_url)
+			
+			var td2_input_url = document.createElement("input");
+			td2_input_url.setAttribute("type","text")
+			td2_input_url.setAttribute("name",td2_input_name)
+			td2_input_url.setAttribute("style","width:95%")
+			
+			td2_url.appendChild(td2_input_url)
+			
+		}
+		
+		function operationStructFunc() {
+			
+			var operationType = document.getElementById("operationStruct");
+			
+            if (operationType.value == "InstallOpStruct")
+			{
+				install_num++
+				addStruct("InstallOpStruct")
+				addInstallOpStruct()
+			}	
+			else if (operationType.value == "UpdateOpStruct")
+			{
+				update_num++
+				addStruct("UpdateOpStruct")
+				addUpdateOpStruct()
+			}
+			else {
+				uninstall_num++
+				addStruct("UninstallOpStruct")
+				addUninstallOpStruct()
+			}
+		}
+		
+	</script>
+</div>
+{% endblock %}

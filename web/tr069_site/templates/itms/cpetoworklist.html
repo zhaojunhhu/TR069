@@ -1,0 +1,86 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+{% load staticfiles %}
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="/static/common.css" rel="stylesheet" type="text/css" />
+	<style type="text/css"></style>
+</head>
+<body>
+    <div class="divpanelcontent" style="overflow: auto">
+		<div style="width: 95%;height: 30px">
+		    <input style="float: right" type="submit" name="addnewworklist" value="新增" />	
+		    <input style="float: right" type="submit" name="revert" value="返回" onclick="history.back()"/>	
+		</div>
+		<div style="clear:both;">
+			<table width="100%" align="left" cellspacing="0" ,cellpadding="0" ,valign="top" >
+				<tr>
+					<td class="tablelistheader" colspan="6" align="left" >
+						工单信息列表
+					</td>
+				</tr>
+				
+			</table>
+		</div>
+		<div style="width:100%;height:500px;overflow: auto">
+			<table width="100%" align="left" cellspacing="0" ,cellpadding="0" ,valign="top">
+				<thead >
+					<td id="titletd1" class="tablelistitem" width="20%">
+						工单序号
+					</td>
+					<td id="titletd2" class="tablelistitem" width="15%">
+						工单名称
+					</td>
+					<td id="titletd3" class="tablelistitem" width="20%">
+						工单状态
+					</td>
+					<td id="titletd4" class="tablelistitem" width="20%">
+						工单类型
+					</td>
+					<td id="titletd5" class="tablelistitem" width="15%">
+						SN号
+					</td>
+					<td id="titletd6" class="tablelistitem" , style="border-right: 1px solid #778899;">
+						开工单日期
+					</td>
+					
+				</thead>
+				<tbody id="tableListBody">
+					{% if worklist_list %}
+                        {% for worklist in worklist_list %}
+                            
+                            <tr>
+                                <td class="tablelisttd1" >
+                                    <a class="inquiryresult_link" href="/itms/{{ worklist.worklist_id }}/theworklistinfo/">{{ worklist.worklist_desc }}</a>
+                                </td>
+                                <td class="tablelisttd2" >
+                                    {{worklist.worklist_name}}
+                                </td>
+                                <td class="tablelisttd3" >
+                                    {{worklist.status}}
+                                </td>
+                                <td class="tablelisttd4" >
+                                    {{worklist.worklist_type}}
+                                </td>
+                                <td class="tablelisttd5" >
+                                    {{worklist.sn}}
+                                </td>
+                                <td class="tablelisttd6"  style="border-right: 1px solid #778899;">
+                                    {{worklist.time_init}}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+				</tbody>
+		    </table>
+            <div style="font-size: 13px">
+                {% if not worklist_list %}
+                未找到相关信息
+                {% endif %}
+            </div>
+		</div>
+    </div>
+</body>
+</html>
+    

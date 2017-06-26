@@ -1,0 +1,149 @@
+{% extends "itms/rpcmethodbase.html" %}
+{% load staticfiles %}
+{% block colorchange %}
+<script>
+	document.getElementById("set_parameter_values").style.color="#00FFFF"
+</script>
+{% endblock %}
+{% block therpc %}
+<div style="width:90%;height:55px;margin-top:10px;margin-left:5%;line-height:40px;overflow:hidden;color:#FFFFFF;
+    text-indent:30px;background-image:url({% static 'rpcparameterpic.bmp' %});background-repeat:no-repeat;font-weight:bold">
+    SetParameterValues 参数列表
+</div>
+<div style="width:90%;height:280px;margin-left:5%;overflow:auto;">
+	<form id="form_id">
+		<div style="width:95%;height:200px;margin-left:5%;overflow:auto;">
+			<table id="table1" cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;">
+				<tr>
+					<td style="width:25%;height:30px;text-align: left">
+						ParameterKey:
+					</td>
+					<td style="width:40%">
+						<input style="width:95%;" type="text" name="ParameterKey" />	
+					</td>
+					<td style="font-size: 15px;">
+						(可选参数)
+					</td>
+				</tr>
+				<tr>
+					<td style="width:25%;height:30px;text-align: left">
+						Name:
+					</td>
+					<td style="width:40%">
+						<input style="width:95%;" type="text" name="Name_1" />	
+					</td>
+					<td>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:25%;height:30px;text-align: left">
+						Value:
+					</td>
+					<td style="width:40%">
+						<input style="width:95%;" type="text" name="Value_1" />	
+					</td>
+					<td style="font-size: 15px;padding-top:10px">
+						<img src={% static 'addico.bmp' %} align="left" ondblclick=operationAdd()></img>
+						(双击图片添加多组配置)
+					</td>
+					
+				</tr>
+			</table>
+		</div>
+		<div style="width:95%;height:50px;margin-left:5%;float:bottom">
+			<table id="table2" cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;margin-top:30px">
+				<tr>
+				    <td colspan="2" style="width:80%">	
+					</td>
+					<td>
+						<input style="margin-left:20px;width:60px;height:30px;" type="button" onclick="sendAjaxRequest(this)" name="SetParameterValues" value="提交" />
+					</td>
+			    </tr>
+			</table>
+		</div>
+	</form>
+	<script>
+		
+		var parameter_num   = 1
+		
+		function addParameterStruct() {
+			
+			var Name = "Name" + "_" + parameter_num
+			var Value = "Value" + "_" + parameter_num
+			
+			addTheTr(Name,"Name:","td2_Name",Name)
+			addTheTr(Value,"Value:","td2_Value",Value)
+			
+		}
+
+		function addDivide() {
+			
+			// 获取parent
+			var element=document.getElementById("table1");
+			
+			// 提示行
+			var tr_divide = document.createElement("tr");
+			var tmp_tr_divide_id = "divide" + "_" + parameter_num
+			tr_divide.setAttribute("id" ,tmp_tr_divide_id)
+			
+			element.appendChild(tr_divide)
+			
+			//信息行
+			var td = document.createElement("td");
+			td.setAttribute("style","width:25%;height:40px;text-align: left")
+			td.setAttribute("colspan","2")
+			
+			var divide_content = "**********************************"
+			var td_text = document.createTextNode(divide_content);
+			td.appendChild(td_text);
+			
+			tr_divide.appendChild(td)
+			
+		}
+		
+		function addTheTr(tr_id,td1_text,td2_id,td2_input_name) {
+			
+			// 获取parent
+			var element=document.getElementById("table1");
+			
+			// 行
+			var tr = document.createElement("tr");
+			tr.setAttribute("id",tr_id)
+			element.appendChild(tr);
+			
+			// 第一列
+			var td1 = document.createElement("td");
+			td1.setAttribute("style","width:25%;height:30px;text-align: left")
+			
+			var td1text = document.createTextNode(td1_text);
+			td1.appendChild(td1text);
+			
+			tr.appendChild(td1)
+			
+			// 第二列
+			var td2 = document.createElement("td");
+			td2.setAttribute("id",td2_id)
+			td2.setAttribute("style","width:40%")
+			
+			tr.appendChild(td2)
+			
+			var td2_input = document.createElement("input");
+			td2_input.setAttribute("type","text")
+			td2_input.setAttribute("name",td2_input_name)
+			td2_input.setAttribute("style","width:95%")
+			
+			td2.appendChild(td2_input)
+			
+		}
+		
+		
+		function operationAdd() {
+			
+			parameter_num++
+			addDivide()
+			addParameterStruct()
+		}
+		
+	</script>
+</div>
+{% endblock %}

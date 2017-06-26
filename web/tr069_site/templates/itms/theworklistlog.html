@@ -1,0 +1,113 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+{% load staticfiles %}
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="/static/common.css" rel="stylesheet" type="text/css" />
+	<style type="text/css"></style>
+	<script>
+	    function homepagetoworklist(){
+		var homepage_url =  "/itms/inquiryworklist/";
+		location.replace(homepage_url)
+	    }
+	    function homepagetocpe(){
+		var homepage_url =  "/itms/inquirycpe/";
+		location.replace(homepage_url)
+	    }
+	    function backtoworklistinfo(){
+		var homepage_url =  "/itms/{{worklist_id}}/theworklistinfo/{{revert}}/";
+		location.replace(homepage_url)
+	    }
+	</script>
+</head>
+<body>
+    <div class="divpanelcontent" >
+		<div style="width: 95%;height: 30px">
+		    <input style="float: right" type="submit" name="revert" value="返回" onclick="backtoworklistinfo()"/>
+		    {% if revert == "yes" %}
+			<input style="float: right" type="submit" name="pagehome" value="首页" onclick="homepagetocpe()" />
+		    {% else %}
+			<input style="float: right" type="submit" name="pagehome" value="首页" onclick="homepagetoworklist()" />
+		    {% endif %}
+		</div>
+		<div style="clear:both;">
+			
+            <table width="95%" align="center" cellspacing="0" ,cellpadding="0" ,valign="top">
+                
+                <tr>
+                    <td class="tablelistheader" colspan="3" align="left" >
+                    结果信息:
+                    </td>
+                </tr>
+                
+                 
+                <tr>
+                    <td class="infotr2tdodd"  width="20%">
+                        操作时间
+                    </td>
+                    <td class="infotr2tdodd"  width="20%">
+                        执行动作
+                    </td>
+                    <td class="infotr2tdodd"  style="border-right: 1.5px solid #6495ED">
+                        执行结果
+                    </td>
+                </tr>
+                
+				
+				{% for time,action,result in worklist.listlog  %}
+					<tr>
+						
+						<td class="infotdeven"  width="20%">
+							{{time}}
+						</td>
+						<td class="infotdeven"  width="20%">
+							{{action}}
+						</td>
+						<td class="infotdeven"  style="border-right: 1.5px solid #6495ED">
+							{{result}}
+						</td>
+						
+					</tr>
+				{% endfor %}
+                
+            </table>
+			</br>
+            {% if worklist.listdetail != '' %}
+				<table width="95%" align="center" cellspacing="0" ,cellpadding="0" ,valign="top" style="overflow: auto;">
+					
+					<tr>
+						<td class="tablelistheader" colspan="3" align="left" >
+						详细信息
+						</td>
+					</tr>
+					<tr>
+						
+						<td class="infotdeven" style="width: 100%;height:400px;border-right: 1.5px solid #6495ED;">
+							{% for detail_line in worklist.listdetail %}
+								{{detail_line}}<br>
+							{% endfor %}
+						</td>
+						
+					</tr>
+					<tr>
+						<td  style="height:30px">	
+							&nbsp
+						</td>	
+					</tr>
+						
+				</table>
+            {% endif %}
+            
+
+		</div>
+		<div style="clear:both;margin-top:20px;">
+			
+		</div>
+		
+		{% block divbottom %}
+		{% endblock %}
+    </div>
+</body>
+</html>
+    

@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+{% load staticfiles %}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>TR069测试平台</title>
+    <link href="/static/common.css" rel="stylesheet" type="text/css" />
+    <link href="/static/admin/js/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="{% static 'admin/js/ext/ext-all.js' %}"></script>
+
+    <script type="text/javascript">
+        var tabPanel = "";
+        var NOW_WINDOWS = "";
+        Ext.onReady(function () {
+            tabPanel = Ext.create("Ext.tab.Panel", {
+                frame: true,
+                activeTab: 0, // 默认激活第一个tab页
+                id:"itmsShow",
+                renderTo: "tablePanel",
+                height: 700,
+                items: [{
+                    title: "用户信息",
+                    html: "",
+                   contentEl: "userInfoPanel"
+                }]
+            });
+
+            // 远程操作面板ID
+            var id_remote_ope_panel = "remote_ope_panel";
+            // 工单管理面板ID
+            var id_worklist_manage_panel = "worklist_manage_panel";
+            // 服务器管理面板ID
+            var id_manage_server_panel = "manage_server_panel";
+
+            // 增加远程操作标签页---start
+            Ext.get("AddRemoteOpePanel").on("click",function(){
+
+                var tabpanel_remote_ope_panel = new Ext.Panel(
+                    {
+                    title:"远程操作",
+                    id:id_remote_ope_panel,
+                    html:" <iframe scrolling='auto' frameborder='0' width='100%' height='100%' src='/itms/inquirycpe/'> </iframe>",
+                    closable:true
+                    }
+                );
+
+                var tab_remote  = tabPanel.getComponent(id_remote_ope_panel);
+                if(tab_remote == null){
+                    tabPanel.add(tabpanel_remote_ope_panel);
+                    tabPanel.setActiveTab(tabpanel_remote_ope_panel);
+                } else {
+                    tabPanel.setActiveTab(tab_remote);
+                }
+            });// end
+
+            // 增加工单管理标签页 ---start
+            Ext.get("AddWorklistPanel").on("click",function(){
+
+                var tabpanel_worklist_manage_panel = new Ext.Panel(
+                    {
+                        title:"工单管理",
+                        id:id_worklist_manage_panel,
+                        html:" <iframe scrolling='auto' frameborder='0' width='100%' height='100%' src='/itms/inquiryworklist/'> </iframe>",
+                        closable:true
+                    }
+                );
+
+                var tab_worklist  = tabPanel.getComponent(id_worklist_manage_panel);
+                if(tab_worklist == null){
+                    tabPanel.add(tabpanel_worklist_manage_panel);
+                    tabPanel.setActiveTab(tabpanel_worklist_manage_panel);
+                } else {
+                    tabPanel.setActiveTab(tab_worklist);
+                }
+            });// end
+
+            // 服务器管理标签页 ---start
+            Ext.get("AddManageServerPanel").on("click",function(){
+
+                var tabpanel_server_manage_panel = new Ext.Panel(
+                    {
+                        title:"服务器管理",
+                        id:id_manage_server_panel,
+                        html:" <iframe scrolling='auto' frameborder='0' width='100%' height='100%' src='/itms/manageserver/'> </iframe>",
+                        closable:true
+                    }
+                );
+
+                var tab_server  = tabPanel.getComponent(id_manage_server_panel);
+                if(tab_server == null){
+                    tabPanel.add(tabpanel_server_manage_panel);
+                    tabPanel.setActiveTab(tabpanel_server_manage_panel);
+                } else {
+                    tabPanel.setActiveTab(tab_server);
+                }
+            });// end
+
+        })
+
+        // 当浏览器大小改变时，重新渲染tab页面 zsj 2014-7-3
+        window.onresize = function(){
+            tabPanel.doLayout();}
+                /*
+         *函数功能：创建一个弹窗，主要处理选择事件
+         *参数：
+         *  window_tilte： 弹窗名字
+         *  window_width： 弹窗宽度
+         *  window_heigth：弹窗高度
+         *  url；          弹窗指向的url地址
+         *返回值：无
+        */
+        function newWindow(worklist_name, worklist_html){
+            // 同一个页面中两个地方调用一个接口show windows后，第二次点击会多次触发绑定事件，故window存在不新建
+            if (NOW_WINDOWS){
+                return ;
+            }
+            var window_title  = worklist_name + "工单文档:";
+            var window_width  = 600;
+            var window_heigth = 550;
+            //var worklist_html = getWorklistDoc(worklist_doc)
+
+            NOW_WINDOWS = Ext.create('Ext.window.Window', {
+                title: window_title ,
+                width: window_width,
+                height:window_heigth,
+                autoScroll:true,
+                resizable:true,
+                x:100,
+                y:100,
+                draggable:true,
+                html: worklist_html,
+                listeners:{
+                    destroy:function(){
+                        clearSelectWindows()   //在关闭上一个windows后清除掉全局变量
+                    },
+                    close:function(){
+                        clearSelectWindows()   //在关闭上一个windows后清除掉全局变量
+                    }
+                }
+            })
+            NOW_WINDOWS.center();
+
+            NOW_WINDOWS.show();
+        }
+
+        // 关闭弹窗
+        function closeWindowsPanel(){
+            NOW_WINDOWS.destroy()
+        }
+
+        // 清理弹窗
+        function clearSelectWindows(){
+            NOW_WINDOWS = null;
+        }
+
+    </script>
+
+    <style type="text/css"></style>
+
+
+</head>
+<body>
+<div style="width:100%">
+    <div class="divtitle">
+        <table width="100%" border="0" height="60" cellpadding="0" cellspacing="0">
+            <tr>
+                <td width="15%">
+                    <img src={% static 'tw.bmp' %} align="left"></img>
+                </td>
+                <td class="titledes" >
+                    TR069 测试平台
+                    <label style="font-size:14px;font-weight:normal;">
+                        &nbsp WEB版本：{{ web_version }}
+                        {% if tr069_version != '不存在版本' %}
+                            &nbsp TR069版本：{{ tr069_version }}
+                        {% endif %}
+                    </label>
+                </td>
+                <td class="logout">
+                    <table align="right">
+                        <tr>
+                            <td colspan="3" align="right" style="text-align:right;vertical-align:top;">
+                                <a style="text-decoration:none;color:#FFFFFF;font-size:12px" href="/logout/">
+                                    注销
+                                </a>
+                            </td>
+                        </tr>
+                        <!--
+                        <tr>
+                            <td class="homepage">
+                                <img src={% static 'homepage.bmp' %} align="right"></img>
+                            </td>
+                            <td class="homepage">
+                                <a style="text-decoration:none;color:#FFFFFF;font-size:12px;" href="/itms/loginsuccess/">
+                                    首页
+                                </a>
+                            </td>
+                        </tr>
+                         -->
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="divleftcontent">
+        <div class="divgps">
+            <label >导航</label>
+        </div>
+        <div >
+            <table  border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan='2'>
+                        &nbsp
+                    </td>
+                </tr>
+                <tr style="height:40px;background-color:#FFFFFF">
+                    <td  width="55%" >
+                        <img src={% static 'remoteopeico.bmp' %} align="right"></img>
+                    </td>
+                    <td  style="font-size:15px;">
+                        <a id="AddRemoteOpePanel" style="text-decoration:none;color:#4169E1" href="javascript:void(0)">远程操作</a>
+                    </td>
+                </tr>
+                <tr style="height:40px;background-color:#FFFFFF">
+                    <td  width="55%">
+                        <img src={% static 'worklistico.bmp' %} align="right"></img>
+                    </td>
+                    <td  style="font-size:15px;">
+
+                        <a id="AddWorklistPanel" style="text-decoration:none;color:#4169E1" href="javascript:void(0)">工单管理</a>
+                    </td>
+                </tr>
+                {% for link_url, link_name in list_user_perms %}
+                    {% if link_name == '服务器管理' %}
+                    <tr style="height:40px;background-color:#FFFFFF">
+                        <td  width="55%">
+                            <img src={% static 'authorityico.bmp' %} align="right"></img>
+                        </td>
+                        <td  style="font-size:15px;">
+                            <a id="AddManageServerPanel" style="text-decoration:none;color:#4169E1" href="javascript:void(0)">服务器管理</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    {% comment %}
+                    {% if link_name == '上传下载' %}
+                    <tr style="height:40px;background-color:#FFFFFF">
+                        <td  width="55%">
+                            <img src={% static 'uploadico.bmp' %} align="right"></img>
+                        </td>
+                        <td  style="font-size:15px;">
+                            <a id="AddUploadPage" style="text-decoration:none;color:#4169E1" href="javascript:void(0)">上传下载</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    {% if link_name == '权限配置' %}
+                    <tr style="height:40px;background-color:#FFFFFF">
+                        <td  width="55%">
+                            <img src={% static 'authorityico.bmp' %} align="right"></img>
+                        </td>
+                        <td  style="font-size:15px;">
+                            <a id="AddAuthorityPage" style="text-decoration:none;color:#4169E1" href="javascript:void(0)">权限配置</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endcomment %}
+
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div class="divrightcontent" id="tablePanel">
+        <div id="userInfoPanel" class="divpanelcontent" >
+            <table   cellpadding="0" cellspacing="0" align="center" style="margin-top:70px;">
+                <tr>
+                    <td style="text-indent:1cm;width:330px;height:32px;color:#4169E1;background-image:url({% static 'userimg.bmp' %});
+                    font-style:italic;font-size:19px;letter-spacing:5px" colspan=2>
+                        用户信息
+                    </td>
+                </tr>
+                <tr >
+                    <td style="text-indent:25px;width:100px;height:25px;color:#4169E1;font-size:15px;
+                    border-top:1px solid #4169E1;border-bottom:1px solid #4169E1;border-left:1px solid #4169E1;border-right:1px solid #4169E1;">
+                        用户名
+                    </td >
+                    <td style="text-indent:25px;height:25px;color:#4169E1;font-size:15px;
+                    border-top:1px solid #4169E1;border-bottom:1px solid #4169E1;border-left:0;border-right:1px solid #4169E1">
+                    {{ user_name }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-indent:25px;width:100px;height:25px;color:#4169E1;font-size:15px;
+                    border-top:0;border-bottom:1px solid #4169E1;border-left:1px solid #4169E1;border-right:1px solid #4169E1">
+                        IP地址
+                    </td >
+                    <td style="text-indent:25px;height:25px;color:#4169E1;font-size:15px;
+                    border-top:0;border-bottom:1px solid #4169E1;border-left:0;border-right:1px solid #4169E1">
+                    {{ remote_addr }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-indent:25px;width:100px;height:25px;color:#4169E1;font-size:15px;
+                    border-top:0;border-bottom:1px solid #4169E1;border-left:1px solid #4169E1;border-right:1px                 solid #4169E1">
+                        登录时间
+                    </td >
+                    <td style="text-indent:25px;height:25px;color:#4169E1;font-size:15px;
+                    border-top:0;border-bottom:1px solid #4169E1;border-left:0;border-right:1px solid #4169E1">
+                    {{ last_login }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="background-color:#99bbbb;clear:both;">
+        <font size="2"><p align=center><i>本网页解释权归装备开发部平台科</i></p></font>
+    </div>
+</div>
+</body>
+</html>

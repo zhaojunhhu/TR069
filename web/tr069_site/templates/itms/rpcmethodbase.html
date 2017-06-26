@@ -1,0 +1,276 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+{% load staticfiles %}
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="{% static 'admin/js/staticrpc.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/jquery.js' %}"></script>
+<style type="text/css">
+    .topdiv
+	{
+		width:100%;
+		height:63px;
+		background-image:url({% static 'topbackground.bmp' %});
+		background-repeat:repeat
+	}
+    .toptitle
+    {
+	    font-family:幼圆;
+	    font-size:33px;
+	    color:#DCDCDC;
+	    font-weight:bold
+    }
+	.logout
+    {
+        text-align:right;
+        vertical-align:top;
+        padding:5px;
+    }
+    .homepage
+    {
+        font-size:15px;
+        color:#FFFFFF;
+        text-align:right;
+        vertical-align:top;
+    }
+	.gpsbar
+    {
+	height:34px;
+	background-image:url({% static 'leadbar.bmp' %});
+	background-repeat:no-repeat;
+	background-position:center;
+	font-family:华文楷体;
+	padding-top:6px;
+    color:#4169E1;
+    font-style:italic;
+    text-indent: 20px;
+    }
+
+    .rpcmethod-link:link,.rpcmethod-link:visited
+    {
+    text-decoration:none;
+    color:#4169E1;
+    }
+    .rpcmethod-link:hover,.rpcmethod-link:active
+    {
+    text-decoration:underline;
+    }
+</style>
+<title>CPE管理系统</title>
+
+<script>
+	var cpe_id = "{{cpe.cpe_id}}"
+	function homepagetoworklist(){
+	    var homepage_url =  "/itms/inquiryworklist/";
+	    location.replace(homepage_url)
+	}
+        function homepagetocpe(){
+	    var homepage_url =  "/itms/inquirycpe/";
+	    location.replace(homepage_url)
+	}
+	function backtocpe(){
+			var backto = "/itms/{{cpe.cpe_id}}/thecpeinfo/{{revert}}/{{worklist_id}}/"
+			location.replace(backto)
+	}
+
+</script>
+</head>
+<body>
+<div style="width:100%">
+    
+    <div style="background-color:#EEEEEE;height:650px;width:100%;float:right;">
+        <div style="width:100%;height:50px;background-image:url({% static 'thecpepic.bmp' %});background-repeat:no-repeat;
+        text-indent:240px;line-height:50px;overflow:hidden;">
+            <label style="font-size:22px;font-family:华文楷体;color:#0000FF;">
+                当前设备：{{ cpe.sn }}
+				
+				<input style="float:right;margin-top:10px;margin-right:10px" type="submit" name="revert" value="返回" onclick="backtocpe()"/>
+				{% if revert == "yes" %}
+				    <input style="float:right;margin-top:10px;margin-right:10px" type="submit" name="pagehome" value="首页" onclick="homepagetocpe()" />
+				{% else %}
+				    <input style="float:right;margin-top:10px;margin-right:10px" type="submit" name="pagehome" value="首页" onclick="homepagetoworklist()" />
+				{% endif %}
+				<img id="executingbar" style="float:right;margin-top:10px;margin-right:10px" src="{%static 'executing.bmp' %}"/ >
+            </label>
+			
+        </div>
+        <div style="width:100%;height:600px;">
+            <div style="width:25%;height:600px;margin-left:0.25%;margin-right:0.25%;background-color:#FFFFFF;float:left;">
+                <div style="width:100%;height:40px;background-position:center;background-image:url({% static 'inquirybar.bmp' %});
+                background-repeat:no-repeat;font-family:华文楷体;color:#4169E1;font-style:italic;text-indent:20px;
+                line-height:40px;overflow:hidden;">
+                    <label>
+                        RPC Methods
+                    </label>
+                </div>
+                <div style="width:100%;height:560px;background-color:#F0FFFF;overflow:auto">
+                    <table>
+                        <tr >
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="get_rpc_methods"  class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/get_rpc_methods/{{revert}}/{{worklist_id}}/">GetRPCMethods</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="set_parameter_values" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/set_parameter_values/{{revert}}/{{worklist_id}}/">SetParameterValues</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="get_parameter_values" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/get_parameter_values/{{revert}}/{{worklist_id}}/">GetParameterValues</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="get_parameter_names" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/get_parameter_names/{{revert}}/{{worklist_id}}/">GetParameterNames</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="set_parameter_attributes" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/set_parameter_attributes/{{revert}}/{{worklist_id}}/">SetParameterAttributes</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="get_parameter_attributes" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/get_parameter_attributes/{{revert}}/{{worklist_id}}/">GetParameterAttributes</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  style="width:100%;height:25px;padding-left:15px">
+                                <a id="add_object" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/add_object/{{revert}}/{{worklist_id}}/">AddObject</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="delete_object" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/delete_object/{{revert}}/{{worklist_id}}/">DeleteObject</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="reboot" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/reboot/{{revert}}/{{worklist_id}}/">Reboot</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="download" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/download/{{revert}}/{{worklist_id}}/">Download</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="upload" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/upload/{{revert}}/{{worklist_id}}/">Upload</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="factory_reset" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/factory_reset/{{revert}}/{{worklist_id}}/">FactoryReset</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="schedule_inform" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/schedule_inform/{{revert}}/{{worklist_id}}/">ScheduleInform</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="get_queued_transfers" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/get_queued_transfers/{{revert}}/{{worklist_id}}/">GetQueuedTransfers</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="set_vouchers" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/set_vouchers/{{revert}}/{{worklist_id}}/">SetVouchers</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;height:25px;padding-left:15px">
+                                <a id="get_options" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/get_options/{{revert}}/{{worklist_id}}/">GetOptions</a>
+                            </td>
+                        </tr>
+						{% if cpe.cwmp_version == "cwmp-1-0" %}
+						
+						{% elif cpe.cwmp_version == "cwmp-1-1" %}
+						    <tr>
+                                <td style="width:100%;height:25px;padding-left:15px">
+                                    <a id="get_all_queued_transfers" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/get_all_queued_transfers/{{revert}}/{{worklist_id}}/">GetAllQueuedTransfers</a>
+                                </td>
+                            </tr>
+						{% else %}
+						    <tr>
+                                <td style="width:100%;height:25px;padding-left:15px">
+                                    <a id="get_all_queued_transfers" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/get_all_queued_transfers/{{revert}}/{{worklist_id}}/">GetAllQueuedTransfers</a>
+                                </td>
+                            </tr>
+							<tr>
+                                <td style="width:100%;height:25px;padding-left:15px">
+                                    <a id="schedule_download" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/schedule_download/{{revert}}/{{worklist_id}}/">ScheduleDownload</a>
+                                </td>
+                            </tr>
+							<tr>
+                                <td style="width:100%;height:25px;padding-left:15px">
+                                    <a id="cancel_transfer" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/cancel_transfer/{{revert}}/{{worklist_id}}/">CancelTransfer</a>
+                                </td>
+                            </tr>
+							<tr>
+                                <td style="width:100%;height:25px;padding-left:15px">
+                                    <a id="change_du_state" class="rpcmethod-link" href="/itms/{{ cpe.cpe_id }}/change_du_state/{{revert}}/{{worklist_id}}/">ChangeDUState</a>
+                                </td>
+                            </tr>
+						{% endif %}
+						<tr>
+							<td  style="height:30px">	
+								&nbsp
+							</td>
+						</tr>
+                    </table>
+				{% block colorchange %}
+                {% endblock %}
+                </div>
+            </div>
+            <div style="width:74.5%;height:600px;background-color:#FFFFFF;float:right;">
+                <div style="width:100%;height:360px;border-style:ridge;border-width:2px;border-color:#AFEEEE">
+                    {% block therpc %}
+                    {% endblock %}
+                </div>
+                <div style="width:100%;height:230px;border-style:ridge;border-width:2px;border-color:#AFEEEE">
+                    <div style="width:90%;height:55px;margin-top:10px;margin-left:5%;line-height:40px;overflow:hidden;color:#FFFFFF;
+                    text-indent:30px;background-image:url({% static 'resultpic.bmp' %});background-repeat:no-repeat;font-weight:bold">
+                        执行结果
+                    </div>
+                    <div style="width:90%;height:150px;margin-left:5%;overflow:auto;">
+                        <table cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;font-size:15px;border:1px solid #4169E1;margin-top: 20px">
+							<tr>
+								<td style="width:20%;height:30px;background-color:#F0FFFF;text-indent:10px;
+								border-bottom:1px solid #4169E1;border-right:1px solid #4169E1; ">
+									操作结果
+								</td>
+								<td id="result_flag" style="width:30%;height:30px;text-indent:10px;border-bottom:1px solid #4169E1;border-right:1px solid #4169E1; ">
+									{{cpe.rpc_exec_result}}
+								</td>
+								<td style="width:20%;height:30px;background-color:#F0FFFF;text-indent:10px;
+									border-bottom:1px solid #4169E1;border-right:1px solid #4169E1; ">
+									错误代码
+								</td>
+								<td id="result_code" style="width:30%;height:30px;text-indent:10px;border-bottom:1px solid #4169E1">
+									{{cpe.rpc_error_code}}
+								</td>
+							</tr>
+							<tr>
+								<td style="width:20%;height:30px;text-indent:10px;background-color:#F0FFFF;border-right:1px solid #4169E1">
+									详细信息
+								</td>
+								<td id="result_srtdata" colspan="3" style="height:30px;text-indent:10px;">
+									{{cpe.rpc_error_des}}
+								</td>
+							</tr>
+						</table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#executingbar").hide();
+</script>
+</body>
+</html>

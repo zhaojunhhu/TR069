@@ -1,0 +1,52 @@
+{% extends "itms/rpcmethodbase.html" %}
+{% load staticfiles %}
+{% block colorchange %}
+<script>
+	document.getElementById("get_options").style.color="#00FFFF"
+</script>
+{% endblock %}
+{% block therpc %}
+<div style="width:90%;height:55px;margin-top:10px;margin-left:5%;line-height:40px;overflow:hidden;color:#FFFFFF;
+    text-indent:30px;background-image:url({% static 'rpcparameterpic.bmp' %});background-repeat:no-repeat;font-weight:bold">
+    GetOptions 参数列表
+</div>
+<div style="width:90%;height:280px;margin-left:5%;overflow:auto;">
+	<form id="form_id">
+		<div style="width:95%;height:200px;margin-left:5%;overflow:auto;">
+			<table cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;">
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						OptionName:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="OptionName" />	
+					</td>
+					<td>	
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;">
+						&nbsp;
+					</td>
+					<td style="width:50%;font-size: 15px;">
+						(如果为空，表示需要返回所有CPE支持的Options)
+					</td>
+		            <td>	
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="width:95%;height:50px;margin-left:5%;float:bottom">
+			<table id="table2" cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;margin-top:30px">
+				<tr>
+				    <td colspan="2" style="width:80%">	
+					</td>
+					<td>
+						<input style="margin-left:20px;width:60px;height:30px;" type="button" onclick="sendAjaxRequest(this)" name="GetOptions" value="提交" />
+					</td>
+			    </tr>
+			</table>
+		</div>
+	</form>	
+</div>
+{% endblock %}

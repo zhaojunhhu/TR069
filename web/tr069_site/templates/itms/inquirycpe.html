@@ -1,0 +1,120 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+{% load staticfiles %}
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="/static/admin/js/jquery.js" type="text/javascript"></script>
+	<link href="/static/common.css" rel="stylesheet" type="text/css" />
+	<style type="text/css"></style>
+	
+</head>
+<body>
+    <div class="divpanelcontent">
+		<br/>
+		<form action="/itms/{{inquiry_page}}/inquiryresult/" method="get" >
+			<div style="clear:both;">	
+				<table align="left" ,cellpadding="0",cellspacing="0",valign="top",style="width: 100%;height: 20;">
+					<tr>	
+						<td align="left" width="30%">
+							<select id="inquirytype" name="inquirytype" style="width:100%;" onchange="inquiryFunction(this.id)">
+								{% if inquiry_type != 'all' %}
+									<option value="all">查询全部</option>
+									<option value="sn" selected="selected">按SN号查询</option>
+								{% else %}
+									<option value="all" selected="selected">查询全部</option>
+									<option value="sn">按SN号查询</option>
+								{% endif %}
+							</select>	
+						</td>
+						<td align="left" width="50%" >
+							<input id="textsn" style="width:95%;" type="text" name="textsn" value="{{input_sn}}"/>
+						</td>
+						<td align="right" >
+							<input style="margin-left:20px;" type="submit" name='inquiry' value="查询" />
+						</td>
+						
+					</tr>
+					
+					<script>
+						var type = document.getElementById("inquirytype");
+						var x = document.getElementById("textsn");
+						if (type.value == "all")
+						{
+							x.value="";
+							x.disabled=true;
+						}
+						else
+						{
+							x.disabled=false
+						}
+					</script>
+					<script>
+						function inquiryFunction(id)
+						{
+							var type = document.getElementById(id);
+							var x=document.getElementById("textsn");
+							if (type.value == "all")
+							{
+								x.value="";
+								x.disabled=true;
+							}	
+							else
+							{
+								x.disabled=false
+							}
+						}
+					</script>
+					
+				</table>
+			</div>
+			<div style="clear:both;margin-top:30px;">
+				<table width="100%" align="left" cellspacing="0" ,cellpadding="0" ,valign="top" >
+					<tr>
+						<td class="tablelistheader" colspan="6" align="left" >
+							设备列表
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="clear:both; width:100%;height:500px;overflow: auto">
+				<table style="border-collapse:collapse"
+					   width="100%" align="left" cellspacing="0" ,cellpadding="0" ,valign="top">
+					
+					<tr >
+						<td id="titletd1" class="tablelistitem" width="20%">
+							SN号
+						</td>
+						<td id="titletd2" class="tablelistitem" width="15%">
+							硬件版本
+						</td>
+						<td id="titletd3" class="tablelistitem" width="15%">
+							软件版本
+						</td>
+						<td id="titletd4" class="tablelistitem" width="10%">
+							TR069版本
+						</td>
+						<td id="titletd5" class="tablelistitem" width="10%">
+							设备类型
+						</td>
+						<td id="titletd6" class="tablelistitem" width="10%">
+							运营商
+						</td>
+						<td id="titletd6" class="tablelistitem" , style="border-right: 1px solid #778899;">
+							设备在线时间
+						</td>
+						
+					</tr>					
+					<tbody id="tableListBody">
+						{% block inquiryresult %}
+						{% endblock %}
+					</tbody>
+				</table>
+			</div>
+			{% block divbottom %}
+		    {% endblock %}
+		</form>
+    </div>
+</body>
+</html>
+    

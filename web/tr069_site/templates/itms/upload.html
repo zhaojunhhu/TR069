@@ -1,0 +1,106 @@
+{% extends "itms/rpcmethodbase.html" %}
+{% load staticfiles %}
+{% block colorchange %}
+<script>
+	document.getElementById("upload").style.color="#00FFFF"
+</script>
+{% endblock %}
+{% block therpc %}
+<div style="width:90%;height:55px;margin-top:10px;margin-left:5%;line-height:40px;overflow:hidden;color:#FFFFFF;
+    text-indent:30px;background-image:url({% static 'rpcparameterpic.bmp' %});background-repeat:no-repeat;font-weight:bold">
+    Upload 参数列表
+</div>
+<div style="width:90%;height:280px;margin-left:5%;overflow:auto;">
+	<form id="form_id">
+		<div style="width:95%;height:200px;margin-left:5%;overflow:auto;">
+			<table cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;">
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						CommandKey:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="CommandKey" />	
+					</td>
+					<td style="font-size: 15px;">
+						(可选参数)
+					</td>
+					
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						FileType:
+					</td>
+					<td style="width:50%">
+						{% if cpe.cwmp_version == "cwmp-1-0" %}
+							<select name="FileType" style="width:97%;">
+								<option value="1 Vendor Configuration File">1 Vendor Configuration File</option>
+								<option value="2 Vendor Log File">2 Vendor Log File</option>
+								<option value="X <OUI> <Vendor-specific identifier>">X &lt;OUI&gt; &lt;Vendor-specific identifier&gt;</option>
+							</select>
+						{% elif cpe.cwmp_version == "cwmp-1-1" %}
+							<select name="FileType" style="width:97%;">
+								<option value="1 Vendor Configuration File">1 Vendor Configuration File</option>
+								<option value="2 Vendor Log File">2 Vendor Log File</option>
+								<option value="X <OUI> <Vendor-specific identifier>">X &lt;OUI&gt; &lt;Vendor-specific identifier&gt;</option>
+							</select>
+						{% else %}
+							<select name="FileType" style="width:97%;">
+								<option value="1 Vendor Configuration File">1 Vendor Configuration File</option>
+								<option value="2 Vendor Log File">2 Vendor Log File</option>
+								<option value="3 Vendor Configuration File &lt;i&gt;">3 Vendor Configuration File &lt;i&gt;</option>
+								<option value="4 Vendor Log File &lt;i&gt;">4 Vendor Log File &lt;i&gt;</option>
+								<option value="X <VENDOR> <Vendor-specific identifier>">X &lt;VENDOR&gt; &lt;Vendor-specific identifier&gt;</option>
+							</select>
+						{% endif  %}
+					</td>
+					<td>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						URL:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="URL" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						Username:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="Username" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						Password:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="Password" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%;height:30px;text-align: left">
+						DelaySeconds:
+					</td>
+					<td style="width:50%">
+						<input style="width:95%;" type="text" name="DelaySeconds" />
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="width:95%;height:50px;margin-left:5%;float:bottom">
+			<table id="table2" cellpadding="0" cellspacing="0" align="center" style="width:100%;color:#4169E1;margin-top:30px">
+				<tr>
+				    <td colspan="2" style="width:80%">	
+					</td>
+					<td>
+						<input style="margin-left:20px;width:60px;height:30px;" type="button" onclick="sendAjaxRequest(this)" name="Upload" value="提交" />
+					</td>
+			    </tr>
+			</table>
+		</div>
+	</form>	
+</div>
+{% endblock %}

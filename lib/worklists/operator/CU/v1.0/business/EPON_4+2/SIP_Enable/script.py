@@ -105,10 +105,10 @@ def test_script(obj):
                          "VoiceProfile.1.SIP.ImplicitRegistrationEnable":[0, "Null"],
                          "VoiceProfile.1.Line.1.SIP.AuthUserName":[1, AuthUserName1],
                          "VoiceProfile.1.Line.1.SIP.AuthPassword":[1, AuthPassword1],
-                         "VoiceProfile.1.Line.1.URI":[1, URI1],
+                         "VoiceProfile.1.Line.1.SIP.URI":[1, URI1],
                          "VoiceProfile.1.Line.2.SIP.AuthUserName":[1, AuthUserName2],
                          "VoiceProfile.1.Line.2.SIP.AuthPassword":[1, AuthPassword2],
-                         "VoiceProfile.1.Line.2.URI":[1, URI2],
+                         "VoiceProfile.1.Line.2.SIP.URI":[1, URI2],
                          "VoiceProfile.1.Line.1.Enable":[1, "Enabled"],
                          "VoiceProfile.1.Line.2.Enable":[1, "Enabled"]}
 
@@ -119,9 +119,9 @@ def test_script(obj):
     else:
         PVC_OR_VLAN_flag = 1
 
-    dict_wanConnectionDevice = {'X_CU_802_1p':[PVC_OR_VLAN_flag, '0'],
-                                'X_CU_VLANEnabled':[PVC_OR_VLAN_flag, '2'],
-                                'X_CU_VLAN':[PVC_OR_VLAN_flag, PVC_OR_VLAN]}
+    dict_wanlinkconfig = {'X_CU_VLANEnabled':[1, '1'],
+                          'X_CU_802_1p':['0','NULL'],
+                          'X_CU_VLAN':[PVC_OR_VLAN_flag, PVC_OR_VLAN]}
 
     # WANPPPConnection节点参数
     # 注意:X_CT-COM_IPMode节点有些V4版本没有做,所以不能使能为1.实际贝曼工单也是没有下发的
@@ -145,7 +145,7 @@ def test_script(obj):
     ret, ret_data = VOIP(obj, sn, WANEnable_Switch, DeviceType,
                         AccessMode, PVC_OR_VLAN,
                         dict_voiceservice,
-                        dict_wanConnectionDevice,
+                        dict_wanlinkconfig,
                         dict_wanpppconnection, dict_wanipconnection,
                         rollbacklist=rollbacklist)
 

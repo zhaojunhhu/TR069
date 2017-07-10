@@ -54,11 +54,11 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
             #第二步：逐个查找
             path2 = '' # 保存查到有相同的PVC或关键参数值的WAN连接路径
             path2_1 = '' #保存WANPPPConection或WANIPConection节点路径保存,后面修改参数时有用
-            # 是否有查到已存在的类似WAN连接的状态位,符合以下标识,桥只关心PVC,其他的只关心X_CT-COM_ServiceList
-            #0 Username和X_CT-COM_ServiceList均相同
-            #1 Username和X_CT-COM_ServiceList均不相同
-            #2 Username相同，X_CT-COM_ServiceList不相同
-            #3 Username不相同，X_CT-COM_ServiceList相同
+            # 是否有查到已存在的类似WAN连接的状态位,符合以下标识,桥只关心PVC,其他的只关心X_CU_ServiceList
+            #0 Username和X_CU_ServiceList均相同
+            #1 Username和X_CU_ServiceList均不相同
+            #2 Username相同，X_CU_ServiceList不相同
+            #3 Username不相同，X_CU_ServiceList相同
             WAN_Flag = None
             #如果是桥连接,则只查PVC,其他的查X_CT-COM_ServiceList是否有相同的
             if AccessMode == 'PPPoE' or AccessMode == 'DHCP' or AccessMode == 'Static' or AccessMode == 'PPPoE_Bridged':
@@ -96,9 +96,9 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
                         log.app_err (info)
                         ret_data_scr += info
                         return ret_res, ret_data_scr
-                # 第2.2步,对于PPPOE查找X_CT-COM_ServiceList和Username值.
-                # 由于贝曼有些版本只查X_CT-COM_ServiceList,或者查到Username相同与否不影响判断结果,
-                # 所以目前只支持查X_CT-COM_ServiceList
+                # 第2.2步,对于PPPOE查找X_CU_ServiceList和Username值.
+                # 由于贝曼有些版本只查X_CU_ServiceList,或者查到Username相同与否不影响判断结果,
+                # 所以目前只支持查X_CU_ServiceList
                 for i in xrange(len(ret_tmp_path2)):
                     info = u"开始调用GetParameterValues查找第%s个WAN连接实例下的X_CU_ServiceList值\n" % str(i+1)
                     log.app_info (info)
@@ -128,20 +128,20 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
                                     or ret_data2_2['ParameterList'][1]['Value'] in X_CU_ServiceList) \
                                 or (X_CU_ServiceList in ret_data2_2['ParameterList'][0]['Value'] \
                                     or X_CU_ServiceList in ret_data2_2['ParameterList'][1]['Value']):
-                                # GCW 20130408 判断X_CT-COM_ServiceList包含与被包含的关系做区分处理.
+                                # GCW 20130408 判断X_CU_ServiceList包含与被包含的关系做区分处理.
                                 if (ret_data2_2['ParameterList'][0]['Value'] in X_CU_ServiceList \
                                   or ret_data2_2['ParameterList'][1]['Value'] in X_CU_ServiceList):
                                     info = u"当前CPE中的X_CU_ServiceList值包含于工单中要求的X_CU_ServiceList值:%s，\n" % X_CU_ServiceList
                                     info += u"走修改WAN连接流程,且重新下发X_CU_ServiceList值的修改.\n"
                                     log.app_info (info)
                                     ret_data_scr += info
-                                    WAN_Flag = 0  #表示CPE当前值包含于工单,走修改WAN流程,且X_CT-COM_ServiceList需下发
+                                    WAN_Flag = 0  #表示CPE当前值包含于工单,走修改WAN流程,且X_CU_ServiceList需下发
                                 else:
                                     info = u"当前工单中的X_CU_ServiceList值：%s包含于CPE中的X_CU_ServiceList值，\n" % X_CU_ServiceList
                                     info += u"走修改WAN连接流程,但不下发对X_CU_ServiceList值的修改.\n"
                                     log.app_info (info)
                                     ret_data_scr += info
-                                    WAN_Flag = 3  #表示工单中的值包含于当前CPE中,走修改WAN流程,但X_CT-COM_ServiceList不需下发
+                                    WAN_Flag = 3  #表示工单中的值包含于当前CPE中,走修改WAN流程,但X_CU_ServiceList不需下发
                                 path2_1 = ret_tmp_path2[i]
                                 #将上一层路径保存并退出循环,留给下一步直接修改linkconfig参数
                                 #ret_tmp_path2[i]类似于InternetGatewayDevice.WANDevice.1.WANConnectionDevice.3.WANPPPConnection.1.
@@ -182,7 +182,7 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
                         voipflag = dict_voiceservice[i][1]
                     para_list.append(dict(Name=tmp_path, Value=dict_voiceservice[i][1]))
 
-            # 如果是VOIP取消工单,但又没有找到相等或包含X_CT-COM_ServiceList的WAN连接,则退出报成功
+            # 如果是VOIP取消工单,但又没有找到相等或包含X_CU_ServiceList的WAN连接,则退出报成功
             if voipflag == "Disabled" and (WAN_Flag == 1 or WAN_Flag == 2):
                 info = u"取消VOIP工单,但查不到%s 的WAN连接\n" % X_CU_ServiceList
                 log.app_info (info)
@@ -208,11 +208,10 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
                 log.app_err (info)
                 ret_data_scr += info
                 return ret_res, ret_data_scr
-
             #0 均相同，只修改LinkConfig.（参考a.1包）
             #1 两者均不相同的情况下：等同于查到是空的情况，后续新建WAN连接参考a.2包）
-            #2 部分相同，而且关键点X_CT-COM_ServiceList不相同的情况下：等同于查到是空的情况，后续新建WAN连接（参考a.3包）
-            #3 部分相同，而且关键点X_CT-COM_ServiceList相同的情况下：等同于查到均相同的情况，只修改LinkConfig.（参考a.4包）
+            #2 部分相同，而且关键点X_CU_ServiceList不相同的情况下：等同于查到是空的情况，后续新建WAN连接（参考a.3包）
+            #3 部分相同，而且关键点X_CU_ServiceList相同的情况下：等同于查到均相同的情况，只修改LinkConfig.（参考a.4包）
             if (WAN_Flag == 1 or WAN_Flag == 2) and voipflag == "Enabled":
                 #第三--一步：新建WANConnectionDevice实例
                 info = u"走X_CU_ServiceList不相同的流程(新建WAN连接).\n"
@@ -225,6 +224,10 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
                     log.app_info (info)
                     ret_data_scr += info
                     return ret_res, ret_data_scr
+
+                info = u"开始调用AddObject新建WANConnectionDevice实例\n"
+                log.app_info (info)
+                ret_data_scr += info
 
                 Classpath = ROOT_PATH
                 #sleep(3)  # must be ;otherwise exception
@@ -280,7 +283,7 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
                     return ret_res, ret_data_scr
 
                 #第三--三步:调用SetParameterValues设置linkconfig参数：
-
+                """
                 if DeviceType == 'ADSL':
                     path5 = tmp_path3 + 'WANDSLLinkConfig.'
                     info = u"开始调用SetParameterValues设置WANDSLLinkConfig参数\n"
@@ -288,24 +291,27 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
                     path5 = tmp_path3 + 'WANEthernetLinkConfig.'
                     info = u"开始调用SetParameterValues设置WANEthernetLinkConfig参数\n"
                 elif DeviceType == 'EPON':
-                    path5 = tmp_path3 + 'X_CT-COM_WANEponLinkConfig.'
-                    info = u"开始调用SetParameterValues设置X_CT-COM_WANEponLinkConfig参数\n"
+                    path5 = tmp_path3 + 'X_CU_WANEponLinkConfig.'
+                    info = u"开始调用SetParameterValues设置X_CU_WANEponLinkConfig参数\n"
                 elif DeviceType == 'VDSL':
-                    path5 = tmp_path3 + 'WANDSLLinkConfig.'
-                    info = u"开始调用SetParameterValues设置WANDSLLinkConfig.参数\n"
+                    path5 = tmp_path3 + 'X_CU_WANVdslLinkConfig.'
+                    info = u"开始调用SetParameterValues设置X_CU_WANVdslLinkConfig参数\n"
                 elif DeviceType == 'GPON':
-                    path5 = tmp_path3 + 'X_CT-COM_WANGponLinkConfig.'
-                    info = u"开始调用SetParameterValues设置X_CT-COM_WANGponLinkConfig参数\n"
+                    path5 = tmp_path3 + 'X_CU_WANGponLinkConfig.'
+                    info = u"开始调用SetParameterValues设置X_CU_WANGponLinkConfig参数\n"
                 else:
                     path5 = tmp_path3 + 'WANDSLLinkConfig.'
                     info = u"开始调用SetParameterValues设置WANDSLLinkConfig参数\n"
                 log.app_info (info)
                 ret_data_scr += info
-
+                """
+                info = u"开始调用SetParameterValues设置参数\n"
+                log.app_info (info)
+                ret_data_scr += info
                 para_list5 = []
                 for i in dict_wanlinkconfig:
                     if dict_wanlinkconfig[i][0] == 1:
-                        tmp_path = path5 + i
+                        tmp_path = tmp_path3 + i
                         para_list5.append(dict(Name=tmp_path, Value=dict_wanlinkconfig[i][1]))
                 if para_list5 == []:
                     ret_data = u"参数列表为空,请检查\n"
@@ -395,38 +401,42 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
                         return ret_res, ret_data_scr
 
             elif (WAN_Flag == 0 or WAN_Flag == 3) and voipflag == "Enabled":
-                #当查到有相匹配的X_CT-COM_ServiceList和Username值时的处理流程，不需要新建,只需更改WANIPConnection或WANPPPConnection节点下的参数即可
+                #当查到有相匹配的X_CU_ServiceList和Username值时的处理流程，不需要新建,只需更改WANIPConnection或WANPPPConnection节点下的参数即可
                 #第三--三步:调用SetParameterValues设置linkconfig参数：
+                """
                 if DeviceType == 'ADSL':
-                    info = u"走X_CT-COM_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改WANDSLLinkConfig参数\n"
+                    info = u"走X_CU_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改WANDSLLinkConfig参数\n"
                     path5 = path2 + 'WANDSLLinkConfig.'
                 elif DeviceType == 'LAN':
-                    info = u"走X_CT-COM_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改WANEthernetLinkConfig参数\n"
+                    info = u"走X_CU_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改WANEthernetLinkConfig参数\n"
                     path5 = path2 + 'WANEthernetLinkConfig.'
                 elif DeviceType == 'EPON':
-                    info = u"走X_CT-COM_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改X_CT-COM_WANEponLinkConfig参数\n"
-                    path5 = path2 + 'X_CT-COM_WANEponLinkConfig.'
+                    info = u"走X_CU_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改X_CU_WANEponLinkConfig参数\n"
+                    path5 = path2 + 'X_CU_WANEponLinkConfig.'
                 elif DeviceType == 'VDSL':
-                    info = u"走X_CT-COM_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改WANDSLLinkConfig参数\n"
-                    path5 = path2 + 'WANDSLLinkConfig.'
+                    info = u"走X_CU_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改X_CU_WANVdslLinkConfig参数\n"
+                    path5 = path2 + 'X_CU_WANVdslLinkConfig.'
                 elif DeviceType == 'GPON':
-                    info = u"走X_CT-COM_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改X_CT-COM_WANGponLinkConfig参数\n"
-                    path5 = path2 + 'X_CT-COM_WANGponLinkConfig.'
+                    info = u"走X_CU_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改X_CU_WANGponLinkConfig参数\n"
+                    path5 = path2 + 'X_CU_WANGponLinkConfig.'
                 else:
-                    info = u"走X_CT-COM_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改WANDSLLinkConfig参数\n"
+                    info = u"走X_CU_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改WANDSLLinkConfig参数\n"
                     path5 = path2 + 'WANDSLLinkConfig.'
                 log.app_info (info)
                 ret_data_scr += info
-
+                """
+                info = u"走X_CU_ServiceList相同的流程(修改WAN连接),开始调用SetParameterValues修改参数\n"
+                log.app_info (info)
+                ret_data_scr += info
                 para_list5 = []
                 for i in dict_wanlinkconfig:
                     if dict_wanlinkconfig[i][0] == 1:
                         #对于Linkconfig的PVC或VLAN节点删除,不做修改
-                        # GCW 20130418 修改WAN连接参数时，对X_CT-COM_Mode节点也不修改
+                        # GCW 20130418 修改WAN连接参数时，对X_CU_Mode节点也不修改
                         if i == 'DestinationAddress' or i == 'VLANIDMark' or \
-                           i == 'X_CT-COM_VLANIDMark' or i == "X_CT-COM_Mode":
+                           i == 'X_CU_VLAN' or i == "X_CU_Mode":
                             continue
-                        tmp_path = path5 + i
+                        tmp_path = path2 + i
                         para_list5.append(dict(Name=tmp_path, Value=dict_wanlinkconfig[i][1]))
                 if para_list5 == []:
                     info = u"参数列表为空,请检查\n"
@@ -464,36 +474,47 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
                 #第三--四步:调用SetParameterValues设置WANPPPConnection参数：
                 path6 = path2_1
                 para_list6 = []
+                WAN_Enable = []
+
                 for i in tmp_values:
                     if tmp_values[i][0] == 1:
-                        # GCW 20130408 判断X_CT-COM_ServiceList包含与被包含的关系做区分处理.
-                        # 标志位0表示X_CT-COM_ServiceList值需以工单中的为准,重新下发,3(即else)表示不下发
+                        # GCW 20130408 判断X_CU_ServiceList包含与被包含的关系做区分处理.
+                        # 标志位0表示X_CU_ServiceList值需以工单中的为准,重新下发,3表示不下发
                         if WAN_Flag == 0:
                             pass
                         else:
-                            if i == 'X_CT-COM_ServiceList':
+                            if i == 'X_CU_ServiceList':
                                 continue
+                        #如果WAN连接使能需单独下发,则将使能的动作单独保存
+                        if WANEnable_Switch == False and i == 'Enable':
+                            WAN_Enable.append(dict(Name=path6 + i, Value=tmp_values[i][1]))
+                            continue
+
                         tmp_path = path6 + i
                         para_list6.append(dict(Name=tmp_path, Value=tmp_values[i][1]))
                 if para_list6 == []:
                     return ret_res, ret_data_scr
 
-                #sleep(3)  # must be ;otherwise exception
-                ret6, ret_data6 = u1.set_parameter_values(ParameterList=para_list6)
-                if (ret6 == ERR_SUCCESS):
-                    info = u"设置参数成功\n"
+                #将WAN连接使能单独下发
+                if WAN_Enable != []:
+                    info = u"开始调用SetParameterValues设置WAN连接使能参数\n"
                     log.app_info (info)
                     ret_data_scr += info
-                    rebootFlag = int(ret_data6["Status"])
-                    if (rebootFlag == 1):
-                        reboot_Yes = 1
-                else:
-                    #对于失败的情况，直接返回失败
-                    info = u"设置参数失败，错误原因：%s\n" % ret_data6
-                    log.app_info (info)
-                    ret_data_scr += info
-                    return ret_res, ret_data_scr
-
+                    #sleep(3)  # must be ;otherwise exception
+                    ret_wan_enable, ret_data_wan_enable = u1.set_parameter_values(ParameterList=WAN_Enable)
+                    if (ret_wan_enable == ERR_SUCCESS):
+                        info = u"设置WAN连接使能参数成功\n"
+                        log.app_info (info)
+                        ret_data_scr += info
+                        rebootFlag = int(ret_data_wan_enable["Status"])
+                        if (rebootFlag == 1):
+                            reboot_Yes = 1
+                    else:
+                        #对于失败的情况，直接返回错误
+                        info = u"设置WAN连接使能参数失败，错误原因：%s\n" % ret_data_wan_enable
+                        log.app_err (info)
+                        ret_data_scr += info
+                        return ret_res, ret_data_scr
             # 如果需要重启,则下发Reboot方法,目前采用静等待130S
             if (reboot_Yes == 1):
 
@@ -503,8 +524,8 @@ def VOIP(obj, sn, WANEnable_Switch, DeviceType,
                     ret_data_scr += ret_data
                     break
 
-            #第七步：调用修改电信维护密码,目前密码固定为nE7jA%5m
-            ret, ret_data = ChangeAccount_CT(obj, sn, change_account)
+            #第七步：调用修改联通维护密码,目前密码固定为CUAdmin
+            ret, ret_data = ChangeAccount_CU(obj, sn, change_account)
             if ret == ERR_FAIL:
                 ret_data_scr += ret_data
                 return ret, ret_data_scr

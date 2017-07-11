@@ -2,7 +2,6 @@
 
 
 import os
-import shutil
 import sys
 import MySQLdb
 import json
@@ -23,8 +22,6 @@ METHOD = []
 WORKLISTDOC = []
 WORKLISTARG = []
 
-
-
 ROOT_PATH = "F:\\GitHub\\TR069\\lib\\worklists\\operator"
 ROOT_PATH = os.path.join(ROOT_PATH, ISP, VERSION, 'business', DOMAIN)
 
@@ -34,14 +31,14 @@ for filename in os.listdir(ROOT_PATH):
     parent = os.path.join(ROOT_PATH, filename)
     try:
         i = sys.path.index(parent)
-        if (i !=0):
-            # stratege= boost priviledge
+        if i != 0:
             sys.path.pop(i)
             sys.path.insert(0, parent)
-    except Exception,e:
+    except Exception, e:
         sys.path.insert(0, parent)
 
     import data
+
     reload(data)
     from data import *
 

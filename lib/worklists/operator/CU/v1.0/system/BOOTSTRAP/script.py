@@ -5,27 +5,30 @@
 
 import os
 import sys
-import re
 
-#debug
+# debug
 DEBUG_UNIT = True
-if (DEBUG_UNIT):
+if DEBUG_UNIT:
     g_prj_dir = os.path.dirname(__file__)
     parent1 = os.path.dirname(g_prj_dir)
     parent2 = os.path.dirname(parent1)
     parent3 = os.path.dirname(parent2)
     parent4 = os.path.dirname(parent3)  # tr069v3\lib
-    sys.path.insert(0, parent4)
-    sys.path.insert(0, os.path.join(parent4, 'common'))
-    sys.path.insert(0, os.path.join(parent4, 'worklist'))
-    sys.path.insert(0, os.path.join(parent4, 'usercmd'))
+    parent5 = os.path.dirname(parent4)
+    parent6 = os.path.dirname(parent5)
+    parent7 = os.path.dirname(parent6)
+    parent8 = os.path.dirname(parent7)
+    sys.path.insert(0, parent8)
+    sys.path.insert(0, os.path.join(parent6, 'common'))
+    sys.path.insert(0, os.path.join(parent6, 'worklist'))
+    sys.path.insert(0, os.path.join(parent6, 'usercmd'))
 
 from    TR069.lib.common.error      import *
-from    TR069.lib.users.user        import UserRpc as User 
+from    TR069.lib.users.user        import UserRpc as User
 from    time import sleep
-import  TR069.lib.common.logs.log   as log 
+import  TR069.lib.common.logs.log   as log
 from    TR069.lib.common.event      import *
-import  TR069.lib.worklists.worklistcfg      as worklistcfg 
+import  TR069.lib.worklists.worklistcfg      as worklistcfg
 
 g_prj_dir = os.path.dirname(__file__)
 parent1 = os.path.dirname(g_prj_dir)
@@ -36,102 +39,54 @@ try:
         # stratege= boost priviledge
         sys.path.pop(i)
         sys.path.insert(0, parent1)
-except Exception,e: 
+except Exception,e:
     sys.path.insert(0, parent1)
 
 
 import _Common
 reload(_Common)
 from _Common import *
-
+import _Config
 
 def test_script(obj):
     """
     obj = MsgWorklistExecute
-    default function name= test_script    
+    default function name= test_script
     """
-    
-    ret_worklist = ERR_FAIL       # 工单执行结果，默认为FAIL
-    ret_rpc = ERR_FAIL            # RPC方法执行结果，默认为FAIL
-    ret_datas = ""                # 初始化执行成功的返回信息
-    sn = obj.sn      
-    
-    # 根路径，在该路径下查找上网账号和密码的节点全路径
-    ROOT_PATH = "InternetGatewayDevice.WANDevice.1.WANConnectionDevice."
-    # 上网账号和密码的正则表达式
-    regex_user_name_path = "InternetGatewayDevice\.WANDevice\.1\.WANConnectionDevice\.\d+\.WANPPPConnection\.\d+\.Username"
-    regex_password_path = "InternetGatewayDevice\.WANDevice\.1\.WANConnectionDevice\.\d+\.WANPPPConnection\.\d+\.Password"
-    find_user_name_path = False       # 是否找到上网账号节点路径的标志，默认为False
-    find_password_path = False        # 是否找到上网密码节点路径的标志，默认为False
-    user_name_path = ""               # 用于保存上网账号节点路径  
-    password_path = ""                # 用于保存上网密码几多路径
-    
-    for nwf in [1]:
-        
-        try:
-            u1=User(sn, ip=worklistcfg.AGENT_HTTP_IP, port=worklistcfg.AGENT_HTTP_PORT,
-                    page=worklistcfg.WORKLIST2AGENT_PAGE, sender=KEY_SENDER_WORKLIST, worklist_id=obj.id_)            
-            #reboot_Yes = 0
-            
-            # Auto_GetPPPConnectionAccount --------------------------
-            #第一步：调用GetParameterNames方法，查询WAN连接
-            info = u"开始调用GetParameterNames方法，查询WAN连接\n"
-            log.app_info (info)
-            ret_datas += info
-            
-            ret_rpc, ret_data = u1.get_parameter_names(ParameterPath=ROOT_PATH)
-            if (ret_rpc == ERR_SUCCESS):
-                info = u"查询WAN连接成功\n"
-                log.app_info (info)
-                ret_datas += info
-                
-                # 从查询结果中筛选上网账号和密码的路径
-                for tmp_dict in ret_data['ParameterList']:
-                    
-                    if re.search(regex_user_name_path, tmp_dict['Name']) is not None:
-                        find_user_name_path = True
-                        user_name_path = tmp_dict['Name']
-                        
-                    if re.search(regex_password_path, tmp_dict['Name']) is not None:
-                        find_password_path = True
-                        password_path = tmp_dict['Name']
-                        
-                    if find_user_name_path and find_password_path:
-                        break
-                else:
-                    # 没有找到匹配的路径，说明没有相应的节点，直接返回
-                    info = u"没有找到上网账号和密码的节点路径.\n"
-                    log.app_info (info)
-                    ret_datas += info
-                    break
-                
-                # 找到相应的节点路径，获取节点路径的值
-                list_path = [user_name_path, password_path]
-                ret_rpc, ret_data = u1.get_parameter_values(ParameterNames=list_path)
-                if (ret_rpc == ERR_SUCCESS):
-                    # TODO:如果以后需要返回查询到的值，可以返回ret_data进行解析
-                    info = u"查询终端上网账号和密码成功. %s\n" % ret_data
-                    log.app_info (info)
-                    ret_datas += info
-                    ret_datas += str(ret_data)
-                    
-                    
-                    obj.dict_ret["str_result"] = ret_datas
-                else:
-                    info = u"查询终端上网账号和密码失败.\n %s \n" % ret_data
-                    log.app_err (info)
-                    ret_datas += info
-                    break
-            else:
-                #对于失败的情况，直接返回失败
-                info = u"查询WAN连接失败,错误信息:%s\n" % ret_data
-                log.app_err (info)
-                ret_datas += info
-                break
+    ret_worklist = ERR_FAIL  # default
+    ret_rpc = ERR_FAIL
+    ret_datas = ""
+    sn = obj.sn
 
-            # Auto_GetRPCMethods ---------------------------------------
-            log.app_info ("Auto process get rpc methods")
-            ret_rpc, ret_data = u1.get_rpc_methods()
+    for nwf in [1]:
+        try:
+
+            # 新的双向的DIGEST认证账号的生成规则为：old+8为随机数
+            user_name = get_random_8str(_Config.CPE2ACS_LOGIN_NAME)
+            password = get_random_8str(_Config.CPE2ACS_LOGIN_PASSWORD)
+            connection_request_user_name = get_random_8str(_Config.ACS2CPE_LOGIN_NAME)
+            connection_request_password = get_random_8str(_Config.ACS2CPE_LOGIN_PASSWORD)
+
+            # 新的联通维护账号密码的生成规则为 “cuadmin” + 8位随机数
+            # cu_account_password = get_random_8str("cuadmin")
+
+            # 组建所有要设置的节点参数
+            ParameterList = [
+                dict(Name="InternetGatewayDevice.ManagementServer.Username",
+                     Value=user_name),
+                dict(Name="InternetGatewayDevice.ManagementServer.Password",
+                     Value=password),
+                dict(Name="InternetGatewayDevice.ManagementServer.ConnectionRequestUsername",
+                     Value=connection_request_user_name),
+                dict(Name="InternetGatewayDevice.ManagementServer.ConnectionRequestPassword",
+                     Value=connection_request_password)]
+                # dict(Name="InternetGatewayDevice.X_CU_Function.Web.AdminPassword",
+                #      Value=cu_account_password)]
+
+            u1 = User(sn, ip=worklistcfg.AGENT_HTTP_IP, port=worklistcfg.AGENT_HTTP_PORT,
+                      page=worklistcfg.WORKLIST2AGENT_PAGE, sender=KEY_SENDER_WORKLIST, worklist_id=obj.id_)
+            log.app_info("Auto process set parameter value: %s " % ParameterList)
+            ret_rpc, ret_data = u1.set_parameter_values(ParameterList=ParameterList)
             ret_datas = ret_datas + "\n" + str(ret_data)
             if (ret_rpc == ERR_SUCCESS):
                 info = "success:%s" % ret_data
@@ -139,27 +94,44 @@ def test_script(obj):
             else:
                 info = "fail:%s"%ret_data
                 log.app_err (info)
-                break            
-            
+                break
+
+            # update 2 acs(修改密码后需要通知ACS)
+            ret_rpc, ret_data = update_username_password_to_acs(sn, user_name, password, connection_request_user_name, connection_request_password)
+            if (ret_rpc != ERR_SUCCESS):
+                info = "fail:%s"%ret_data
+                log.app_err (info)
+                break
+
+            # -------------------------
+            log.app_info("Auto process get rpc methods")
+            ret_rpc, ret_data = u1.get_rpc_methods()
+            ret_datas = ret_datas + "\n" + str(ret_data)
+            if ret_rpc == ERR_SUCCESS:
+                info = "success:%s" % ret_data
+                log.app_info(info)
+            else:
+                info = "fail:%s" % ret_data
+                log.app_err(info)
+                break
+
             ret_worklist = ERR_SUCCESS
 
-        except Exception,e:
+        except Exception, e:
             info = str(e)
-            log.app_err (info)
+            log.app_err(info)
             ret_datas = ret_datas + "\n" + info
-            break                
-        
-    obj.dict_ret["str_result"] = ret_datas    
-    return ret_worklist        
+            break
+
+    obj.dict_ret["str_result"] = ret_datas
+    return ret_worklist
+
 
 if __name__ == '__main__':
     log_dir = g_prj_dir
     log.start(name="nwf", directory=log_dir, level="DebugWarn")
-    log.set_file_id(testcase_name="tr069")    
-    
+    log.set_file_id(testcase_name="tr069")
+
     obj = MsgWorklistExecute(id_="1")
     obj.sn = "2013012901"
     test_script(obj)
-    
-    
-    

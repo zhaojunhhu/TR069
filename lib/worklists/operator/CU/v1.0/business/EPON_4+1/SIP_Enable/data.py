@@ -39,7 +39,7 @@ WORKLIST_ARGS = {
 "AuthUserName1":("55511021","9"),
 "AuthPassword1":("55511021","10"),
 "URI1":("55511021","11"),
-"PVC_OR_VLAN":("PVC:0/63", "15"),
-"X_CU_ServiceList":("VOIP", "16"),
-"WANEnable_Switch":("True", "17")
+"PVC_OR_VLAN":("PVC:0/63", "12"),
+"X_CU_ServiceList":("VOIP", "13"),
+"WANEnable_Switch":("True", "14")
 }

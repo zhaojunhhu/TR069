@@ -80,8 +80,8 @@ def test_script(obj):
                      Value=connection_request_user_name),
                 dict(Name="InternetGatewayDevice.ManagementServer.ConnectionRequestPassword",
                      Value=connection_request_password)]
-                # dict(Name="InternetGatewayDevice.X_CU_Function.Web.AdminPassword",
-                #      Value=cu_account_password)]
+                dict(Name="InternetGatewayDevice.X_CU_Function.Web.AdminPassword",
+                     Value=cu_account_password)]
 
             u1 = User(sn, ip=worklistcfg.AGENT_HTTP_IP, port=worklistcfg.AGENT_HTTP_PORT,
                       page=worklistcfg.WORKLIST2AGENT_PAGE, sender=KEY_SENDER_WORKLIST, worklist_id=obj.id_)

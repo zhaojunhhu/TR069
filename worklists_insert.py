@@ -26,7 +26,9 @@ ROOT_PATH = "F:\\GitHub\\TR069\\lib\\worklists\\operator"
 ROOT_PATH = os.path.join(ROOT_PATH, ISP, VERSION, 'business', DOMAIN)
 
 # 遍历获取工单参数
-for filename in os.listdir(ROOT_PATH):
+worklist_name = os.listdir(ROOT_PATH)
+worklist_name.remove('__init__.py')
+for filename in worklist_name:
     METHOD.append(filename)
     parent = os.path.join(ROOT_PATH, filename)
     try:

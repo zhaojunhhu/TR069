@@ -1,5 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 
 
-print "[file=%s] loaded." %__file__
-
+print "[file=%s] loaded." % __file__

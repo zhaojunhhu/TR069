@@ -7,7 +7,7 @@ WORKLIST_DOC = """
 功能描述：生成一个开通PPPoE上网工单.
     
     参数：
-    | PVC_OR_VLAN           | PVC:0/61 | ADSL上行用PVC格式,LAN\EPON\VDSL则用VLAN格式,默认是ADSL的PVC |
+    | PVC_OR_VLAN           | PVC:0/61 | ADSL上行用PVC格式,LAN\GPON\VDSL则用VLAN格式,默认是ADSL的PVC |
     | Username              | TW61 | 拨号上网的帐号,默认TW61 |
     | Password              | TW61 | 拨号上网的密码,默认TW61 |
     | X_CT_COM_LanInterface | LAN1 | 绑定LAN端口,默认LAN1 |
@@ -28,10 +28,10 @@ WORKLIST_ARGS = {
 "Username":("TW61", "2"),
 # PPPOE
 "Password":("TW61", "3"),
-# ������Ķ˿
+# ������Ķ˿
 "X_CT_COM_LanInterface":("LAN1", "4"),
-# ������ķ
+# ������ķ
 "X_CT_COM_ServiceList":("INTERNET", "5"),
-# WANʹܶǷ������·
+# WANʹܶǷ������·
 "WANEnable_Switch":("True", "6")
 }

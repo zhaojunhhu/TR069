@@ -14,12 +14,12 @@ WORKLIST_DOC = """
     | PhysicalTermID                 | 1 | 物理终结点标识，起始1 |
     | PhysicalTermIDPrefix           | A | 终端的物理终结点标识前缀 |
     | PhysicalTermIDAddLen           | 1 | 物理终结点标识的前缀后面添加的位数 |
-    | PVC_OR_VLAN                    | PVC:0/63 | ADSL上行用PVC格式,LAN\EPON\VDSL则用VLAN格式,默认是ADSL的PVC |
+    | PVC_OR_VLAN                    | PVC:0/63 | ADSL上行用PVC格式,LAN\GPON\VDSL则用VLAN格式,默认是ADSL的PVC |
     | X_CT_COM_ServiceList           | VOIP | WAN连接的服务模式,即X_CT-COM_ServiceList节点值,默认VOIP |
     | WANEnable_Switch               | True | WAN连接使能与WAN连接参数是否一起下发,True表示一起下发.默认为True |
-                           
-            
-    
+
+
+
     注意：此键字调用的是通配置的工单，如果想测逐个配置的工单（贝曼不支持，因为电信规范中没有相前节点配置），请执行另外的相应工单
 """
 
@@ -41,4 +41,3 @@ WORKLIST_ARGS = {
 # 最后的WAN连接使能动作是否单独下发
 "WANEnable_Switch":("True", "10")
 }
-

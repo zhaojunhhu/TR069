@@ -7,7 +7,7 @@ WORKLIST_DOC = """
 功能描述：生成一个TR069混合上网新装工单，在同一VLAN内新建桥接连接开通IPTV业务。
 
     参数：
-    | PVC_OR_VLAN           | PVC:0/65 | ADSL上行用PVC格式,LAN\EPON\VDSL则用VLAN格式,默认是ADSL的PVC |
+    | PVC_OR_VLAN           | PVC:0/65 | ADSL上行用PVC格式,LAN\GPON\VDSL则用VLAN格式,默认是ADSL的PVC |
     | X_CT_COM_LanInterface | LAN1 | 绑定LAN端口,默认LAN1,可以为LAN1,LAN2,LAN3,LAN4,WLAN1,WLAN2,WLAN3,WLAN4 |     
     | WANEnable_Switch      | True | WAN连接使能与WAN连接参数是否一起下发,True表示一起下发.默认为True |
     | X_CT_COM_MulticastVlan  | 165 | 公共组播VLAN(注意:如果此参数值为"null",则表示不下发组播VLAN节点.) |

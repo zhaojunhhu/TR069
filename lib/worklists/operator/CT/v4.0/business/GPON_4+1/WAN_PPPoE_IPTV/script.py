@@ -50,19 +50,19 @@ def test_script(obj):
     """
     """
     sn = obj.sn # 取得SN号
-    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\EPON三种
+    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\GPON三种
     rollbacklist = []  # 存储工单失败时需回退删除的实例.目前缺省是不开启回退
     # 初始化日志
     obj.dict_ret.update(str_result=u"开始执行工单:%s........\n" %
                         os.path.basename(os.path.dirname(__file__)))
     
     # data传参
-    PVC_OR_VLAN1 = obj.dict_data.get("PVC_OR_VLAN1")[0]  # ADSL上行只关心PVC值,LAN和EPON上行则关心VLAN值
+    PVC_OR_VLAN1 = obj.dict_data.get("PVC_OR_VLAN1")[0]  # ADSL上行只关心PVC值,LAN和GPON上行则关心VLAN值
     Username = obj.dict_data.get("Username")[0]
     Password = obj.dict_data.get("Password")[0]
     X_CT_COM_LanInterface1 = obj.dict_data.get("X_CT_COM_LanInterface1")[0]
     X_CT_COM_ServiceList1 = obj.dict_data.get("X_CT_COM_ServiceList1")[0]
-    PVC_OR_VLAN2 = obj.dict_data.get("PVC_OR_VLAN2")[0]  # ADSL上行只关心PVC值,LAN和EPON上行则关心VLAN值
+    PVC_OR_VLAN2 = obj.dict_data.get("PVC_OR_VLAN2")[0]  # ADSL上行只关心PVC值,LAN和GPON上行则关心VLAN值
     X_CT_COM_MulticastVlan = obj.dict_data.get("X_CT_COM_MulticastVlan")[0] # 新增公共组播VLAN的下发
     
     # 强制将使能动作与参数一起下发
@@ -85,7 +85,7 @@ def test_script(obj):
                  'ProxyEnable':[0, 'Null'], 
                  'SnoopingEnable':[0, 'Null']}
 
-    # X_CT-COM_WANEponLinkConfig节点参数
+    # X_CT-COM_WANGPONLinkConfig节点参数
     if PVC_OR_VLAN1 == "":
         PVC_OR_VLAN1_flag = 0
     else:
@@ -94,7 +94,7 @@ def test_script(obj):
     dict_wanlinkconfig1 = {'Enable':[1, '1'],
                           'Mode':[PVC_OR_VLAN1_flag, '2'],
                           'VLANIDMark':[PVC_OR_VLAN1_flag, PVC_OR_VLAN1]}
-    # X_CT-COM_WANEponLinkConfig节点参数
+    # X_CT-COM_WANGPONLinkConfig节点参数
     if PVC_OR_VLAN2 == "":
         PVC_OR_VLAN2_flag = 0
     else:

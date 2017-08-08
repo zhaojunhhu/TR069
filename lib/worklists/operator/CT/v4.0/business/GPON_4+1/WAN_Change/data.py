@@ -5,7 +5,7 @@
 # 工单 描述
 WORKLIST_DOC = """
 功能描述：生成一个WAN连接修改工单,对于ADSL上行的CPE,根据PVC进行修改,
-    对于LAN\EPON\VDSL上行的CPE,则根据VLAN进行修改.
+    对于LAN\GPON\VDSL上行的CPE,则根据VLAN进行修改.
     最多支持三条WAN连接的修改操作,PVC_OR_VLAN为null时表示不对该WAN连接进行操作。
     
     参数：

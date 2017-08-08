@@ -18,13 +18,13 @@ WORKLIST_DOC = """
     | WEPKeyIndex        | 1 | WEP密钥索引号,默认为1 |
     | WEPEncryptionLevel | 40-bit | WEP加密标准,默认40-bit |
     | WEPKey             | 0123456789 | WEP密钥,默认0123456789 |
-    | PVC_OR_VLAN1       | PVC:0/71 | 第一条WAN的PVC或VLAN.ADSL上行用PVC格式,LAN\EPON\VDSL则用VLAN格式,默认是ADSL的PVC |
+    | PVC_OR_VLAN1       | PVC:0/71 | 第一条WAN的PVC或VLAN.ADSL上行用PVC格式,LAN\GPON\VDSL则用VLAN格式,默认是ADSL的PVC |
     | Username1          | TW71 | 第一条WAN的拨号上网的帐号,默认TW71 |
     | Password1          | TW71 | 第一条WAN的拨号上网的密码,默认TW71 |
-    | PVC_OR_VLAN2       | PVC:0/72 | 第二条WAN的PVC或VLAN.ADSL上行用PVC格式,LAN\EPON\VDSL则用VLAN格式,默认是ADSL的PVC |
+    | PVC_OR_VLAN2       | PVC:0/72 | 第二条WAN的PVC或VLAN.ADSL上行用PVC格式,LAN\GPON\VDSL则用VLAN格式,默认是ADSL的PVC |
     | Username2          | TW72 | 第二条WAN的拨号上网的帐号,默认TW72 |
     | Password2          | TW72 | 第二条WAN的拨号上网的密码,默认TW72 |
-    | PVC_OR_VLAN3       | PVC:0/73 | 第三条WAN的PVC或VLAN.ADSL上行用PVC格式,LAN\EPON\VDSL则用VLAN格式,默认是ADSL的PVC |
+    | PVC_OR_VLAN3       | PVC:0/73 | 第三条WAN的PVC或VLAN.ADSL上行用PVC格式,LAN\GPON\VDSL则用VLAN格式,默认是ADSL的PVC |
     | PVC_OR_VLAN4       | PVC:0/74 | 第四条WAN的拨号上网的帐号,默认TW71 |
     | WANEnable_Switch   | True | WAN连接使能与WAN连接参数是否一起下发,True表示一起下发.默认为True |
     

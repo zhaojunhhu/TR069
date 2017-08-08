@@ -47,7 +47,7 @@ def test_script(obj):
     """
     """
     sn = obj.sn # 取得SN号
-    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\EPON三种
+    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\GPON三种
     rollbacklist = []  # 存储工单失败时需回退删除的实例.目前缺省是不开启回退
     # 初始化日志
     obj.dict_ret.update(str_result=u"开始执行工单:%s........\n" %

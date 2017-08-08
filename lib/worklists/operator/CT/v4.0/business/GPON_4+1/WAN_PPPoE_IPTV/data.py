@@ -7,12 +7,12 @@ WORKLIST_DOC = """
 功能描述：生成一个开通PPPoE上网和IPTV的Other桥工单.
 
     参数：
-    | PVC_OR_VLAN1           | PVC:0/65 | ADSL上行用PVC格式,LAN\EPON\VDSL则用VLAN格式,默认是ADSL的PVC |
+    | PVC_OR_VLAN1           | PVC:0/65 | ADSL上行用PVC格式,LAN\GPON\VDSL则用VLAN格式,默认是ADSL的PVC |
     | Username               | TW65 | 拨号上网的帐号,默认TW65 |
     | Password               | TW65 | 拨号上网的密码,默认TW65 |
     | X_CT_COM_LanInterface1 | LAN1 | 绑定LAN端口,默认LAN1 |
     | X_CT_COM_ServiceList1  | INTERNET | WAN连接的服务模式,即X_CT-COM_ServiceList节点值,默认INTERNET |
-    | PVC_OR_VLAN2           | PVC:0/66 | Other桥的PVC或VLAN,ADSL上行用PVC格式,LAN\EPON\VDSL则用VLAN格式,默认是ADSL的PVC |
+    | PVC_OR_VLAN2           | PVC:0/66 | Other桥的PVC或VLAN,ADSL上行用PVC格式,LAN\GPON\VDSL则用VLAN格式,默认是ADSL的PVC |
     | X_CT_COM_MulticastVlan | 166 | 公共组播VLAN(注意:如果此参数值为"null",则表示不下发组播VLAN节点.) |
     | WANEnable_Switch       | True | WAN连接使能与WAN连接参数是否一起下发,True表示一起下发.默认为True |
     
@@ -32,14 +32,14 @@ WORKLIST_ARGS = {
 "PVC_OR_VLAN1":("PVC:0/65", "1"),
 "Username":("TW65", "2"),
 "Password":("TW65", "3"),
-# ������Ķ˿
+# ������Ķ˿
 "X_CT_COM_LanInterface1":("LAN1", "4"),
-# ������ķ
+# ������ķ
 "X_CT_COM_ServiceList1":("INTERNET", "5"),
 # PVC_OR_VLAN2
 "PVC_OR_VLAN2":("PVC:0/66", "6"),
 "X_CT_COM_MulticastVlan":("166", "7"),
-# WANʹܶǷ������·
+# WANʹܶǷ������·
 "WANEnable_Switch":("True", "8")
 }
 

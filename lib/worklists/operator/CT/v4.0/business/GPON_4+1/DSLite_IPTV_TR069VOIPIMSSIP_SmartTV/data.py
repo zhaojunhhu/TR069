@@ -14,7 +14,7 @@ WORKLIST_DOC = """
 
 
     参数：
-    |  PVC_OR_VLAN1            | 2500 |  WAN连接的VLAN,LAN\EPON\VDSL用VLAN格式,默认是EPON的VLAN  |
+    |  PVC_OR_VLAN1            | 2500 |  WAN连接的VLAN,LAN\GPON\VDSL用VLAN格式,默认是GPON的VLAN  |
     |  Username                | tw6@pon.com |  拨号上网的帐号,默认tw6@pon.com  |
     |  Password                | admin6 |  拨号上网的密码,默认admin6  |
     |  X_CT_COM_LanInterface1  | LAN3,LAN4,WLAN1 |  绑定LAN端口,默认LAN3,LAN4,WLAN1  |
@@ -30,9 +30,9 @@ WORKLIST_DOC = """
     |  RouterAdvEnable         | 1 |  是否使能SLAAC，默认为1   |
     |  AdvManagedFlag          | 1 |  地址是否通过自动配置机制分配，默认为1         |
     |  AdvOtherConfigFlag      | 1 |  地址之外的其他信息是否通过自动配置机制分配，默认为1  |
-    |  PVC_OR_VLAN2            | 2 |  IPTV的VLAN，默认是EPON的VLAN   |
+    |  PVC_OR_VLAN2            | 2 |  IPTV的VLAN，默认是GPON的VLAN   |
     |  X_CT_COM_MulticastVlan  | 166 | 公共组播VLAN(注意:如果此参数值为"null",则表示不下发组播VLAN节点.) |
-    |  PVC_OR_VLAN3            | 46 |  VOIP的VLAN，默认是EPON的VLAN   |
+    |  PVC_OR_VLAN3            | 46 |  VOIP的VLAN，默认是GPON的VLAN   |
     |  ProxyServer                           | 172.24.55.67 |  SIP服务器域名或者为IP地址 |
     |  ProxyServerPort                       | 5060 |  SIP服务器端口号 |
     |  RegistrarServer                       | 172.24.55.67 |  Registrar服务器域名或者为IP地址 |

@@ -49,7 +49,7 @@ def test_script(obj):
     """
     """
     sn = obj.sn # 取得SN号
-    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\EPON三种
+    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\GPON三种
     rollbacklist = []  # 存储工单失败时需回退删除的实例.目前缺省是不开启回退
     # 初始化日志
     obj.dict_ret.update(str_result=u"开始执行工单:%s........\n" %
@@ -139,7 +139,7 @@ def test_script(obj):
     WLAN3 = 'InternetGatewayDevice.LANDevice.1.WLANConfiguration.3'
     WLAN4 = 'InternetGatewayDevice.LANDevice.1.WLANConfiguration.4'
     
-    # 第一条WAN的 X_CT-COM_WANEponLinkConfig节点参数
+    # 第一条WAN的 X_CT-COM_WANGPONLinkConfig节点参数
     if PVC_OR_VLAN1 == "":
         PVC_OR_VLAN1_flag = 0
     else:
@@ -161,7 +161,7 @@ def test_script(obj):
                               'X_CT-COM_LanInterface-DHCPEnable':[0, 'Null'], 
                               'X_CT-COM_IPMode':[0, 'Null']}
     
-    # 第二条WAN的 X_CT-COM_WANEponLinkConfig节点参数
+    # 第二条WAN的 X_CT-COM_WANGPONLinkConfig节点参数
     if PVC_OR_VLAN2 == "":
         PVC_OR_VLAN2_flag = 0
     else:
@@ -182,7 +182,7 @@ def test_script(obj):
                               'X_CT-COM_LanInterface-DHCPEnable':[0, 'Null'], 
                               'X_CT-COM_IPMode':[0, 'Null']}
     
-    # 第三条WAN的 X_CT-COM_WANEponLinkConfig节点参数
+    # 第三条WAN的 X_CT-COM_WANGPONLinkConfig节点参数
     if PVC_OR_VLAN3 == "":
         PVC_OR_VLAN3_flag = 0
     else:
@@ -203,7 +203,7 @@ def test_script(obj):
                               'X_CT-COM_LanInterface-DHCPEnable':[0, 'Null'], 
                               'X_CT-COM_IPMode':[0, 'Null']}
     
-    # 第四条WAN的 X_CT-COM_WANEponLinkConfig节点参数
+    # 第四条WAN的 X_CT-COM_WANGPONLinkConfig节点参数
     if PVC_OR_VLAN4 == "":
         PVC_OR_VLAN4_flag = 0
     else:

@@ -9,7 +9,7 @@ WORKLIST_DOC = """
     IPv4/v6为INTERNET服务模式，采用PPPoE认证；
     
     参数：
-    | PVC_OR_VLAN1           | 2500 | WAN连接的VLAN,LAN\EPON\VDSL用VLAN格式,默认是EPON的VLAN |
+    | PVC_OR_VLAN1           | 2500 | WAN连接的VLAN,LAN\GPON\VDSL用VLAN格式,默认是GPON的VLAN |
     | Username               | tw6@pon.com | 拨号上网的帐号,默认tw6@pon.com |
     | Password               | admin6 | 拨号上网的密码,默认admin6 |
     | X_CT_COM_LanInterface1 | LAN3,LAN4,WLAN1 | 绑定LAN端口,默认LAN3,LAN4,WLAN1 |

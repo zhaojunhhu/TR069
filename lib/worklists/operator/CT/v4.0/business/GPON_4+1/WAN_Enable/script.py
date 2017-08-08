@@ -47,7 +47,7 @@ def test_script(obj):
     """
     """
     sn = obj.sn # 取得SN号
-    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\EPON三种
+    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\GPON三种
     AccessMode = 'PPPoE'    # WAN接入模式,可选PPPoE_Bridge,PPPoE,DHCP,Static
     change_or_enable = 'Enable'
     # 初始化日志

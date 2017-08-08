@@ -5,7 +5,7 @@
 # 工单 描述
 WORKLIST_DOC = """
 功能描述：生成一个WAN连接启用禁用工单,对于ADSL上行的CPE,根据PVC进行识别,
-    对于LAN\EPON\VDSL上行的CPE,则根据VLAN进行识别.
+    对于LAN\GPON\VDSL上行的CPE,则根据VLAN进行识别.
     最多支持三条WAN连接的启用禁用操作,PVC_OR_VLAN为null时表示不对该WAN连接进行操作。
     
     参数：

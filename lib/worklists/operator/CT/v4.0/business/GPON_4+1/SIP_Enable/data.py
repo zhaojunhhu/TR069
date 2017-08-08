@@ -21,12 +21,12 @@ WORKLIST_DOC = """
     | X_CT_COM_Standby_OutboundProxyPort   | 5060 | 备用Outbound服务器端口号 |
     | AuthUserName1                        | 55511021 | S1口认证用户名 |
     | AuthPassword1                        | 55511021 | S1口认证密码 |
-    | PVC_OR_VLAN                          | PVC:0/63 | ADSL上行用PVC格式,LAN\EPON\VDSL则用VLAN格式,默认是ADSL的PVC |
+    | PVC_OR_VLAN                          | PVC:0/63 | ADSL上行用PVC格式,LAN\GPON\VDSL则用VLAN格式,默认是ADSL的PVC |
     | X_CT_COM_ServiceList                 | VOIP | WAN连接的服务模式,即X_CT-COM_ServiceList节点值,默认VOIP |
     | WANEnable_Switch                     | True | WAN连接使能与WAN连接参数是否一起下发,True表示一起下发.默认为True |
-                           
-            
-    
+
+
+
     注意:对于只有一个S口的CPE,即使传参数有设置AuthUserName2和AuthPassword2值,在工单模板中也会删除掉而不下发S2口的信息
 """
 
@@ -52,4 +52,3 @@ WORKLIST_ARGS = {
 "X_CT_COM_ServiceList":("VOIP", "16"),
 "WANEnable_Switch":("True", "17")
 }
-

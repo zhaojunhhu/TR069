@@ -7,7 +7,7 @@ WORKLIST_DOC = """
 功能描述：生成一个开通静态地址上网的WAN连接工单.
     
     参数：
-    | PVC_OR_VLAN           | PVC:0/64 | ADSL上行用PVC格式,LAN\EPON\VDSL则用VLAN格式,默认是ADSL的PVC |
+    | PVC_OR_VLAN           | PVC:0/64 | ADSL上行用PVC格式,LAN\GPON\VDSL则用VLAN格式,默认是ADSL的PVC |
     | ExternalIPAddress     | 10.10.10.64 | IP地址,默认10.10.10.64 |
     | SubnetMask            | 255.255.255.0 | 子网掩码,默认255.255.255.0 |
     | DefaultGateway        | 10.10.10.1 | 网关,默认10.10.10.1 |

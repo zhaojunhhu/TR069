@@ -22,7 +22,7 @@ if (DEBUG_UNIT):
 from TR069.lib.common.event import *
 from TR069.lib.common.error import *
 from time import sleep
-import TR069.lib.common.logs.log as log 
+import TR069.lib.common.logs.log as log
 
 g_prj_dir = os.path.dirname(__file__)
 parent1 = os.path.dirname(g_prj_dir)
@@ -33,7 +33,7 @@ try:
         # stratege= boost priviledge
         sys.path.pop(i)
         sys.path.insert(0, parent2)
-except Exception,e: 
+except Exception,e:
     sys.path.insert(0, parent2)
 
 import _Common
@@ -47,13 +47,13 @@ def test_script(obj):
     """
     """
     sn = obj.sn # 取得SN号
-    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\EPON三种
+    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\GPON三种
     AccessMode = 'DHCP'    # WAN接入模式,可选PPPoE_Bridge,PPPoE,DHCP,Static
     rollbacklist = []  # 存储工单失败时需回退删除的实例.目前缺省是不开启回退
     # 初始化日志
     obj.dict_ret.update(str_result=u"开始执行工单:%s........\n" %
                         os.path.basename(os.path.dirname(__file__)))
-    
+
     # data传参
     MediaGatewayControler = obj.dict_data.get("MediaGatewayControler")[0]
     Standby_MediaGatewayControler = obj.dict_data.get("Standby_MediaGatewayControler")[0]
@@ -62,11 +62,11 @@ def test_script(obj):
     PhysicalTermID = obj.dict_data.get("PhysicalTermID")[0]
     PhysicalTermIDPrefix = obj.dict_data.get("PhysicalTermIDPrefix")[0]
     PhysicalTermIDAddLen = obj.dict_data.get("PhysicalTermIDAddLen")[0]
-    PVC_OR_VLAN = obj.dict_data.get("PVC_OR_VLAN")[0]    # ADSL上行只关心PVC值,LAN和EPON上行则关心VLAN值
+    PVC_OR_VLAN = obj.dict_data.get("PVC_OR_VLAN")[0]    # ADSL上行只关心PVC值,LAN和GPON上行则关心VLAN值
     X_CT_COM_ServiceList = obj.dict_data.get("X_CT_COM_ServiceList")[0]
     WANEnable_Switch = obj.dict_data.get("WANEnable_Switch")[0]
-    
-    
+
+
     # "InternetGatewayDevice.Services.VoiceService.1."
     # 注意,H248的Capabilities.SignalingProtocols节点是只读的,但贝曼工单里有下发这个参数,所以.....
     dict_voiceservice = {"VoiceProfile.1.X_CT-COM_ServerType":[1, "2"],
@@ -104,71 +104,71 @@ def test_script(obj):
                          "VoiceProfile.1.Line.2.X_CT-COM_H248.PhysicalTermID":[0, "Null"],
                          "VoiceProfile.1.Line.1.Enable":[1, "Enabled"],
                          "VoiceProfile.1.Line.2.Enable":[1, "Enabled"]}
-    
+
     # 对X_CT_COM_LanInterface重新解析,兼容GUI或RF传参数LAN1,lan1格式
     #ret, X_CT_COM_LanInterface = ParseLANName(X_CT_COM_LanInterface)
     #if ret == ERR_FAIL:
     #    info = u'输入的X_CT_COM_LanInterface参数错误'
     #    obj.dict_ret.update(str_result=obj.dict_ret["str_result"] + info)
     #    return ret_res
-    
-    
-    # X_CT-COM_WANEponLinkConfig节点参数
+
+
+    # X_CT-COM_WANGPONLinkConfig节点参数
     if PVC_OR_VLAN == "":
         PVC_OR_VLAN_flag = 0
     else:
         PVC_OR_VLAN_flag = 1
-        
+
     dict_wanlinkconfig = {'Enable':[1, '1'],
                           'Mode':[PVC_OR_VLAN_flag, '2'],
                           'VLANIDMark':[PVC_OR_VLAN_flag, PVC_OR_VLAN]}
-    
+
     # WANPPPConnection节点参数
     # 注意:X_CT-COM_IPMode节点有些V4版本没有做,所以不能使能为1.实际贝曼工单也是没有下发的
     dict_wanpppconnection = {}
-    
+
     # WANIPConnection节点参数
     dict_wanipconnection = {'Enable':[1, '1'],
-                            'ConnectionType':[1, 'IP_Routed'], 
+                            'ConnectionType':[1, 'IP_Routed'],
                             'Name':[0, 'Null'],
-                            'NATEnabled':[0, 'Null'], 
+                            'NATEnabled':[0, 'Null'],
                             'AddressingType':[1, 'DHCP'],
-                            'ExternalIPAddress':[0, '10.10.10.10'], 
+                            'ExternalIPAddress':[0, '10.10.10.10'],
                             'SubnetMask':[0, '255.255.255.0'],
-                            'DefaultGateway':[0, '10.10.10.1'], 
+                            'DefaultGateway':[0, '10.10.10.1'],
                             'DNSEnabled':[0, 'Null'],
-                            'DNSServers':[0, '10.10.10.2'], 
-                            'X_CT-COM_LanInterface':[0, "Null"], 
+                            'DNSServers':[0, '10.10.10.2'],
+                            'X_CT-COM_LanInterface':[0, "Null"],
                             'X_CT-COM_ServiceList':[1, X_CT_COM_ServiceList]}
-    
+
     # 执行VOIP开通工单
-    ret, ret_data = VOIP(obj, sn, WANEnable_Switch, DeviceType, 
+    ret, ret_data = VOIP(obj, sn, WANEnable_Switch, DeviceType,
                         AccessMode, PVC_OR_VLAN,
                         dict_voiceservice,
-                        dict_wanlinkconfig, 
+                        dict_wanlinkconfig,
                         dict_wanpppconnection, dict_wanipconnection,
                         rollbacklist=rollbacklist)
-    
+
     # 将工单脚本执行结果返回到OBJ的结果中
     obj.dict_ret.update(str_result=obj.dict_ret["str_result"] + ret_data)
-    
+
     # 如果执行失败，统一调用回退机制（缺省是关闭的）
     if ret == ERR_FAIL:
         ret_rollback, ret_data_rollback = rollback(sn, rollbacklist, obj)
         obj.dict_ret.update(str_result=obj.dict_ret["str_result"] + ret_data_rollback)
-    
+
     info = u"工单:%s执行结束\n" % os.path.basename(os.path.dirname(__file__))
-    obj.dict_ret.update(str_result=obj.dict_ret["str_result"] + info)    
+    obj.dict_ret.update(str_result=obj.dict_ret["str_result"] + info)
     return ret
 
 if __name__ == '__main__':
     log_dir = g_prj_dir
     log.start(name="nwf", directory=log_dir, level="DebugWarn")
-    log.set_file_id(testcase_name="tr069")    
-    
+    log.set_file_id(testcase_name="tr069")
+
     obj = MsgWorklistExecute(id_="1")
     obj.sn = "3F3001880F5CAD80F"
-    
+
     dict_data= {"MediaGatewayControler":("172.24.242.251","1"),
                 "Standby_MediaGatewayControler":("172.24.242.251","2"),
                 "DeviceID":("test","3"),

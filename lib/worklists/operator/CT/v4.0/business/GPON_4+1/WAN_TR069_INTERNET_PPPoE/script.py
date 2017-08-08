@@ -47,7 +47,7 @@ def test_script(obj):
     """
     """
     sn = obj.sn # 取得SN号
-    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\EPON三种
+    DeviceType = "GPON"  # 绑定tr069模板类型.只支持ADSL\LAN\GPON三种
     AccessMode = 'PPPoE'    # WAN接入模式,可选PPPoE_Bridge,PPPoE,DHCP,Static
     X_CT_COM_ServiceList = "TR069,INTERNET"  # WAN连接的服务模式,和以前的RF统一，写死 zsj 2014-6-26
     rollbacklist = []  # 存储工单失败时需回退删除的实例.目前缺省是不开启回退
@@ -56,7 +56,7 @@ def test_script(obj):
                         os.path.basename(os.path.dirname(__file__)))
     
     # data传参
-    PVC_OR_VLAN = obj.dict_data.get("PVC_OR_VLAN")[0]    # ADSL上行只关心PVC值,LAN和EPON上行则关心VLAN值
+    PVC_OR_VLAN = obj.dict_data.get("PVC_OR_VLAN")[0]    # ADSL上行只关心PVC值,LAN和GPON上行则关心VLAN值
     Username = obj.dict_data.get("Username")[0]
     Password = obj.dict_data.get("Password")[0]
     X_CT_COM_LanInterface = obj.dict_data.get("X_CT_COM_LanInterface")[0]
